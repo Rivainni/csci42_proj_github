@@ -4,6 +4,9 @@ console.log ("Welcome to MediaLists!")
 const express = require("express");
 const app = express(); 
 
+app.use(express.urlencoded({extended: true}))
+app.use(express.json())
+
 // Configuration to resolve EJS path issues
 // EJS will not work if node server is launched from outside of project root directory
 // without this setup
@@ -17,8 +20,11 @@ app.set('view engine', 'ejs');
 // Use MySQL
 var mysql = require("mysql");
 
+// Use Axios
+const axios = require('axios');
+
 // Connect to MySQL database
-var connection = mysql.createConnection({
+var  db = mysql.createConnection({
 host: 'localhost',
 user: 'root',
 password: '1234',
@@ -26,7 +32,7 @@ database: 'medialists',
 });
 
 // Test Database Query
-connection.query('SELECT "The database is running..." AS status', function (error, results, fields) {
+db.query('SELECT "The database is running..." AS status', function (error, results, fields) {
     if (error) throw error;
     console.log(results[0]);
 });
@@ -107,18 +113,68 @@ app.get('/register', (req, res) => {
     res.render('register.ejs')
 })
 
-app.get('/search', (req, res) => {
-    res.render('search.ejs')
+app.get('/search', async (req, res) => {
+    const qstring = req.query
+    const qurl = `https://api.trakt.tv/search/movie?query= ${qstring.q}`
+    var searchData = []
+
+    await axios.get(qurl , {
+  headers: {
+    'Content-Type': 'application/json',
+    'trakt-api-verion': '2',
+    'trakt-api-key': '67cb9a4ced5c32500437a9b9ce8988df785fb9bf086a1931d59a4e59a6e3cb05'
+    }
+    })
+    .then((res) => {
+    
+    for(let data of res.data) {
+        searchData.push(data.movie)
+    }
+    console.log(searchData)
+    })
+    .catch((error) => {
+    console.error(error)
+    })
+    res.render('search.ejs', {searchData})
+
+
 })
+app.post('/search', async (req,res) => {
+
+    searchData = []
+    await axios.get('https://api.trakt.tv/search/movie?query=tron', {
+  headers: {
+    'Content-Type': 'application/json',
+    'trakt-api-verion': '2',
+    'trakt-api-key': '67cb9a4ced5c32500437a9b9ce8988df785fb9bf086a1931d59a4e59a6e3cb05'
+    }
+    })
+    .then((res) => {
+    
+    for(let data of res.data) {
+        searchData.push(data.movie)
+    }
+    console.log(searchData)
+    })
+    .catch((error) => {
+    console.error(error)
+    })
+    res.render('search.ejs', {searchData})
+    })
 
 app.get('/tv', (req, res) => {
     res.render('tv.ejs')
 })
 
+
 app.get('/tvDetail', (req, res) => {
     res.render('tvDetail.ejs')
 })
 
+
 app.get('*', (req, res) => {
     res.send('<h1>MediaLists Page not available.</h1>.')
 })
+
+// API Calls
+ 

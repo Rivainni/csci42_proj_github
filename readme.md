@@ -13,6 +13,7 @@ Install node.js dependencies by running `npm install` from root directory of pro
 Package installation via npm and required modules for node (no need to do these if installed from package.json):
 `npm install --save mysql`
 `npm install --save express`
+`npm install --save axios`
 
 When configuration is complete, you may run the server with: `node app.js` (Ensure that mySQL server is running as well).
 
@@ -53,7 +54,7 @@ you are required to create a folder named `public` in the root folder.
 If you're going to download Bootstrap (rather than use CDN) these need to be put in the public folder.
 app.css also needs to be put inside public folder.
 
-## Git
+## Git (Not Complete)
 After installing Git from git-scm.com, check with `git --version`
 
 Configure global user name
@@ -64,6 +65,23 @@ Configure global user.email "xxxx@obf.ateneo.edu"
 
 Check Global Configurations
 `git config --global --list`
+
+Initialize project folder
+`git init`
+
+Show hidden files on mac
+`cmd+shift+.`
+
+Check merge status
+`git status`
+
+Stage changed files to be commited
+`git add .`
+
+Commit changes
+`git commit -m "my first commit"`
+
+
 
 ## Nodemon Installation and Configuration (Optional)
 Nodemon is an optional package.
@@ -85,3 +103,25 @@ run the server with:
 
 `npm run devserver`
 
+## Trakt API Data
+Client ID: 67cb9a4ced5c32500437a9b9ce8988df785fb9bf086a1931d59a4e59a6e3cb05
+Client Secret: b803aefe251f13d6e250282c267b0d298451c9f44a1b9e84f9863fe9a1a517bc
+
+## TMDB API
+API Key
+f5d0b40e98581b4563c21ee53a7209ee
+
+Bearer Token
+eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmNWQwYjQwZTk4NTgxYjQ1NjNjMjFlZTUzYTcyMDllZSIsInN1YiI6IjYwNTBmMDI1OTc2YTIzMDA1MzJmNGYxMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.TaLIvnWo0ojdqn7INShG0g3xwc6oWhpCUzYBKvHhtZM
+
+
+
+# Working Search.EJS from POST route
+<%- include("navbar.ejs")%>
+<h1>Search Page</h1>
+<ul>
+    <% for (data of searchData) { %>
+    <li><%- data.title %></li>
+    <% }; %>
+</ul>
+<%- include("footer.ejs")%>

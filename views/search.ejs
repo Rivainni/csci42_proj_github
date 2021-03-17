@@ -1,4 +1,8 @@
 <%- include("navbar.ejs")%>
 <h1>Search Page</h1>
-
+<ul>
+    <% for (data of searchData) { %>
+    <li><%= data.title %></li>
+    <% }; %>
+</ul>
 <%- include("footer.ejs")%>
