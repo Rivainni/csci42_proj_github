@@ -12,7 +12,7 @@ app.use(express.json())
 // without this setup
 const path = require('path')
 app.set('views', path.join(__dirname, '/views'))
-app.set(express.static(path.join(__dirname, 'public')))
+app.use(express.static(path.join(__dirname, 'public')))
 
 // Use EJS
 app.set('view engine', 'ejs');
