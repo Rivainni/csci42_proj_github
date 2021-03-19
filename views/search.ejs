@@ -1,8 +1,45 @@
 <%- include("navbar.ejs")%>
 <h1>Search Page</h1>
-<ul>
+
     <% for (data of searchData) { %>
-    <li><%= data.title %></li>
-    <% }; %>
+    <%      if (data.media_type == 'tv') { %>
+        <li><%= data.name%>, <%= data.id%>, <%= data.media_type %></li>
+    <% }       else { %>
+
+        <li><%= data.title%>, <%= data.id%>, <%= data.media_type %></li>
+    
+
+    <%} }; %>
 </ul>
+    <% for (data of searchData) { %>
+
+    <% if (data.id == '680304') {break} %>
+    <div class="card">
+      <img src="https://image.tmdb.org/t/p/original/wwemzKWzjKYJFfCeiB57q3r4Bcm.png"
+       class="card-img-top" alt="...">
+      <div class="card-body">
+    <%      if (data.media_type == 'tv') { %>
+        <h5 class="card-title"><li><%= data.name %></li></h5>
+    <% }       else { %>
+        <h5 class="card-title"><li><%= data.title %></li></h5>
+    <% }  %>
+        <p class="card-text">
+            <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                <button type="button" class="btn btn-secondary">1</button>
+                <button type="button" class="btn btn-secondary">2</button>
+              
+                <div class="btn-group" role="group">
+                  <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle"  data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                   Rating 
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                    <a class="dropdown-item" href="#">Dropdown link</a>
+                    <a class="dropdown-item" href="#">Dropdown link</a>
+                  </div>
+                </div>
+              </div>
+        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+      </div>
+    </div>
+    <% } %>
 <%- include("footer.ejs")%>

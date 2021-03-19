@@ -114,14 +114,9 @@ f5d0b40e98581b4563c21ee53a7209ee
 Bearer Token
 eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmNWQwYjQwZTk4NTgxYjQ1NjNjMjFlZTUzYTcyMDllZSIsInN1YiI6IjYwNTBmMDI1OTc2YTIzMDA1MzJmNGYxMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.TaLIvnWo0ojdqn7INShG0g3xwc6oWhpCUzYBKvHhtZM
 
+Keyword Search
+https://api.themoviedb.org/3/search/keyword?api_key=f5d0b40e98581b4563c21ee53a7209ee&query=<queryString>&page=1
 
+Get Movie Details
+https://api.themoviedb.org/3/movie/<movie_id>?api_key=f5d0b40e98581b4563c21ee53a7209ee
 
-# Working Search.EJS from POST route
-<%- include("navbar.ejs")%>
-<h1>Search Page</h1>
-<ul>
-    <% for (data of searchData) { %>
-    <li><%- data.title %></li>
-    <% }; %>
-</ul>
-<%- include("footer.ejs")%>

@@ -114,21 +114,24 @@ app.get('/register', (req, res) => {
 })
 
 app.get('/search', async (req, res) => {
-    const qstring = req.query
-    const qurl = `https://api.trakt.tv/search/movie?query= ${qstring.q}`
+    const qstring = req.query.q
     var searchData = []
-
-    await axios.get(qurl , {
+    await axios.get(`https://api.themoviedb.org/3/search/multi?api_key=f5d0b40e98581b4563c21ee53a7209ee&query=${qstring}&page=1`, {
   headers: {
     'Content-Type': 'application/json',
-    'trakt-api-verion': '2',
-    'trakt-api-key': '67cb9a4ced5c32500437a9b9ce8988df785fb9bf086a1931d59a4e59a6e3cb05'
-    }
+    'charset': 'utf-8'
+}
     })
     .then((res) => {
-    
-    for(let data of res.data) {
-        searchData.push(data.movie)
+   
+        
+    for(let data of res.data.results) {
+        if (data.media_type == 'tv' || data.media_type == 'movie') {
+            if (data.media_type == 'tv') {
+                renameKey(data, data.original_title, data.title)
+            }
+            searchData.push(data)
+        }
     }
     console.log(searchData)
     })
@@ -136,30 +139,28 @@ app.get('/search', async (req, res) => {
     console.error(error)
     })
     res.render('search.ejs', {searchData})
+    })
 
-
-})
-app.post('/search', async (req,res) => {
-
-    searchData = []
-    await axios.get('https://api.trakt.tv/search/movie?query=tron', {
+app.delete('/search', async (req,res) => {
+    qstring = req.body.q 
+    searchyData = []
+    await axios.get(`https://api.themoviedb.org/3/search/keyword?api_key=f5d0b40e98581b4563c21ee53a7209ee&query=${qstring}&page=1`, {
   headers: {
     'Content-Type': 'application/json',
-    'trakt-api-verion': '2',
-    'trakt-api-key': '67cb9a4ced5c32500437a9b9ce8988df785fb9bf086a1931d59a4e59a6e3cb05'
-    }
+    'charset': 'utf-8'
+}
     })
     .then((res) => {
-    
-    for(let data of res.data) {
-        searchData.push(data.movie)
+
+    for(let data of res.data.results) {
+        searchyData.push(data.name)
     }
-    console.log(searchData)
+    console.log(searchyData)
     })
     .catch((error) => {
     console.error(error)
     })
-    res.render('search.ejs', {searchData})
+    res.render('search.ejs', {searchyData})
     })
 
 app.get('/tv', (req, res) => {
@@ -177,4 +178,14 @@ app.get('*', (req, res) => {
 })
 
 // API Calls
+
+const clone = (obj) => Object.assign({}, obj);
+
+const renameKey = (object, key, newKey) => {
+    const clonedObj = clone(object);
+    const targetKey = clonedObj[key];
+    delete clonedObj[key];
+    clonedObj[newKey] = targetKey;
+    return clonedObj;
+  };
  
