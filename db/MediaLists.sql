@@ -5,7 +5,6 @@ CREATE TABLE user(
     username VARCHAR(255) NOT NULL UNIQUE PRIMARY KEY,
     last_name VARCHAR(255) NOT NULL,
     first_name VARCHAR(255) NOT NULL,
-    mi VARCHAR(255) NOT NULL,
     pwd VARCHAR(255) NOT NULL CHECK (pwd REGEXP '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$'),
     login_status INT NOT NULL DEFAULT 0 CHECK (login_status=0 OR login_status=1)
 );
@@ -67,6 +66,7 @@ CREATE TABLE media_list(
 CREATE TABLE rating(
     rating_id INT NOT NULL AUTO_INCREMENT UNIQUE PRIMARY KEY,
     score INT NOT NULL CHECK (score>0 AND score<=10),
+    rating_date DATE NOT NULL,
     media_id INT NOT NULL,
     username VARCHAR(255) NOT NULL,
     FOREIGN KEY (media_id) REFERENCES media(media_id) ON DELETE CASCADE,

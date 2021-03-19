@@ -1,7 +1,7 @@
-INSERT INTO user (username, last_name, first_name, MI, pwd)
+INSERT INTO user (username, last_name, first_name, pwd)
 VALUES
-('Shoukaku', 'Crane', 'Soaring', 'F', 'Helloworld0!'),
-('Zuikaku', 'Crane', 'Auspicious', 'F', 'Helloworld1!');
+('Shoukaku', 'Crane', 'Soaring', 'Helloworld0!'),
+('Zuikaku', 'Crane', 'Auspicious', 'Helloworld1!');
 
 INSERT INTO media (trakt_id, media_type)
 VALUES
@@ -44,7 +44,7 @@ VALUES
 (2, 1),
 (2, 2);
 
-INSERT INTO rating (score, media_id, username)
+INSERT INTO rating (score, rating_date, media_id, username)
 VALUES
-(2, 1, 'Zuikaku'),
-(10, 2, 'Shoukaku');
+(2, '2019-01-12', 1, 'Zuikaku'),
+(10, '2020-03-05', 2, 'Shoukaku');
