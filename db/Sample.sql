@@ -1,7 +1,7 @@
 INSERT INTO user (username, last_name, first_name, MI, pwd)
 VALUES
-('Shoukaku', 'Crane', 'Soaring', 'F', 'Helloworld'),
-('Zuikaku', 'Crane', 'Auspicious', 'F', 'Helloworld1');
+('Shoukaku', 'Crane', 'Soaring', 'F', 'Helloworld0!'),
+('Zuikaku', 'Crane', 'Auspicious', 'F', 'Helloworld1!');
 
 INSERT INTO media (trakt_id, media_type)
 VALUES

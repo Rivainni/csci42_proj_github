@@ -6,7 +6,7 @@ CREATE TABLE user(
     last_name VARCHAR(255) NOT NULL,
     first_name VARCHAR(255) NOT NULL,
     mi VARCHAR(255) NOT NULL,
-    pwd VARCHAR(255) NOT NULL,
+    pwd VARCHAR(255) NOT NULL CHECK (pwd REGEXP '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$'),
     login_status INT NOT NULL DEFAULT 0 CHECK (login_status=0 OR login_status=1)
 );
 
