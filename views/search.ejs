@@ -11,9 +11,11 @@
 
     <%} }; %>
 </ul>
+<div class="container">
+    <div class="row">
     <% for (data of searchData) { %>
-
     <% if (data.id == '680304') {break} %>
+    <div class="col-md-4">
     <div class="card">
       <img src="https://image.tmdb.org/t/p/original/wwemzKWzjKYJFfCeiB57q3r4Bcm.png"
        class="card-img-top" alt="...">
@@ -40,6 +42,9 @@
               </div>
         <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
       </div>
+      </div>
     </div>
     <% } %>
+    </div>
+    </div>
 <%- include("footer.ejs")%>
