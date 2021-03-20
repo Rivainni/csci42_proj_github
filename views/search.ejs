@@ -1,30 +1,26 @@
 <%- include("navbar.ejs")%>
-<h1>Search Page</h1>
 
-    <% for (data of searchData) { %>
-    <%      if (data.media_type == 'tv') { %>
-        <li><%= data.name%>, <%= data.id%>, <%= data.media_type %></li>
-    <% }       else { %>
-
-        <li><%= data.title%>, <%= data.id%>, <%= data.media_type %></li>
-    
-
-    <%} }; %>
-</ul>
 <div class="container">
     <div class="row">
     <% for (data of searchData) { %>
     <% if (data.id == '680304') {break} %>
+    <% if (data.poster_path != 'null') {var image_link = "https://image.tmdb.org/t/p/original" + data.poster_path} %>
+    <% var target_link = data.media_type + "/" + data.id %>
     <div class="col-md-4">
     <div class="card">
-      <img src="https://image.tmdb.org/t/p/original/wwemzKWzjKYJFfCeiB57q3r4Bcm.png"
-       class="card-img-top" alt="...">
+    <a href = <%= target_link%> >
+        <img src= <%= image_link %> class="card-img-top" alt="No image available">
+    </a>
       <div class="card-body">
+        <p class="card-text text-center"><small class="btn btn-danger" style="pointer-events: none"><%= data.media_type %></small></p>
     <%      if (data.media_type == 'tv') { %>
         <h5 class="card-title"><%= data.name %></h5>
+        <% var year = (new Date(data.first_air_date)).getFullYear(); %>
     <% }       else { %>
         <h5 class="card-title"><%= data.title %></h5>
+        <% var year = (new Date(data.release_date)).getFullYear(); %>
     <% }  %>
+        <p class="card-text"><%= year %></p>
         <p class="card-text">
             <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
                 <button type="button" class="btn btn-secondary">1</button>
@@ -40,7 +36,6 @@
                   </div>
                 </div>
               </div>
-        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
       </div>
       </div>
     </div>

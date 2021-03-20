@@ -78,23 +78,27 @@ app.get('/lists', (req, res) => {
     res.render('lists.ejs')
 })
 
-/*
-app.get('/lists/:userList', (req, res) => {
-    const {userList} = req.params;
-    res.send('<h1> ${userList} User List Page</h1>')
-})
-*/
-
 app.get('/login', (req, res) => {
     res.render('login.ejs')
 })
 
-app.get('/movie', (req, res) => {
-    res.render('movie.ejs')
-})
-
-app.get('/movieDetail', (req, res) => {
-    res.render('movieDetail.ejs')
+app.get('/movie/:movieID', async (req, res) => {
+    const movieID = req.params.movieID;
+    var movieData = {}
+    await axios.get(`https://api.themoviedb.org/3/movie/${movieID}?api_key=f5d0b40e98581b4563c21ee53a7209ee`, {
+    headers: {
+    'Content-Type': 'application/json',
+    'charset': 'utf-8'
+    }
+    })
+    .then((res) => {
+        movieData = res.data
+    })
+    .catch((error) => {
+    console.error(error)
+    })
+    console.log(movieData)
+    res.render('movie.ejs', {movieData})
 })
 
 app.get('/navbar', (req, res) => {
@@ -113,65 +117,51 @@ app.get('/register', (req, res) => {
     res.render('register.ejs')
 })
 
+
 app.get('/search', async (req, res) => {
-    const qstring = req.query.q
-    var searchData = []
+    var qstring = req.query.q
+    if (qstring == "") {qstring = "undefined"}
+    var searchData = []   
     await axios.get(`https://api.themoviedb.org/3/search/multi?api_key=f5d0b40e98581b4563c21ee53a7209ee&query=${qstring}&page=1`, {
-  headers: {
+    headers: {
     'Content-Type': 'application/json',
     'charset': 'utf-8'
-}
+    }
     })
     .then((res) => {
-   
-        
     for(let data of res.data.results) {
         if (data.media_type == 'tv' || data.media_type == 'movie') {
-            if (data.media_type == 'tv') {
-                renameKey(data, data.original_title, data.title)
+            searchData.push(data)    
             }
-            searchData.push(data)
         }
-    }
-    console.log(searchData)
+    
+        console.log(searchData)
     })
     .catch((error) => {
     console.error(error)
     })
     res.render('search.ejs', {searchData})
-    })
+     
+})
 
-app.delete('/search', async (req,res) => {
-    qstring = req.body.q 
-    searchyData = []
-    await axios.get(`https://api.themoviedb.org/3/search/keyword?api_key=f5d0b40e98581b4563c21ee53a7209ee&query=${qstring}&page=1`, {
-  headers: {
+app.get('/tv/:tvID', async (req, res) => {
+    const tvID = req.params.tvID
+    var tvData = {}
+    await axios.get(`https://api.themoviedb.org/3/tv/${tvID}?api_key=f5d0b40e98581b4563c21ee53a7209ee`, {
+    headers: {
     'Content-Type': 'application/json',
     'charset': 'utf-8'
-}
+    }
     })
     .then((res) => {
-
-    for(let data of res.data.results) {
-        searchyData.push(data.name)
-    }
-    console.log(searchyData)
+        tvData = res.data
     })
     .catch((error) => {
     console.error(error)
     })
-    res.render('search.ejs', {searchyData})
-    })
-
-app.get('/tv', (req, res) => {
-    res.render('tv.ejs')
+    console.log(tvData)
+    res.render('tv.ejs', {tvData})
 })
-
-
-app.get('/tvDetail', (req, res) => {
-    res.render('tvDetail.ejs')
-})
-
 
 app.get('*', (req, res) => {
     res.send('<h1>MediaLists Page not available.</h1>.')
@@ -179,13 +169,4 @@ app.get('*', (req, res) => {
 
 // API Calls
 
-const clone = (obj) => Object.assign({}, obj);
-
-const renameKey = (object, key, newKey) => {
-    const clonedObj = clone(object);
-    const targetKey = clonedObj[key];
-    delete clonedObj[key];
-    clonedObj[newKey] = targetKey;
-    return clonedObj;
-  };
  
