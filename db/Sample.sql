@@ -25,7 +25,7 @@ VALUES
 ('Shoukaku'),
 ('Zuikaku');
 
-INSERT INTO media_history
+INSERT INTO media_history (history_id, media_id, watch_date)
 VALUES
 (1, 1, '2020-01-02'),
 (1, 2, '2019-08-04'),
