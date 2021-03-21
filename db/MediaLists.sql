@@ -11,27 +11,18 @@ CREATE TABLE user(
 
 CREATE TABLE media(
     media_id INT NOT NULL AUTO_INCREMENT UNIQUE PRIMARY KEY,
-    trakt_id INT NOT NULL UNIQUE,
-    media_type CHAR(1) CHECK (media_type='M' OR media_type ='T')
-);
-
-CREATE TABLE episode(
-    episode_id INT NOT NULL AUTO_INCREMENT UNIQUE PRIMARY KEY,
-    trakt_id INT NOT NULL UNIQUE,
-    season_no INT NOT NULL,
-    episode_no INT NOT NULL,
-    media_id INT NOT NULL,
-    FOREIGN KEY(media_id) REFERENCES media(media_id) ON DELETE CASCADE
+    tmdb_id INT NOT NULL,
+    media_type CHAR(1) CHECK (media_type='M' OR media_type='T' OR media_type='E'),
+    season_no INT,
+    episode_no INT
 );
 
 CREATE TABLE comment(
     comment_id INT NOT NULL AUTO_INCREMENT UNIQUE PRIMARY KEY,
     comment_text VARCHAR(255) NOT NULL,
     media_id INT NOT NULL,
-    episode_id INT,
     username VARCHAR(255) NOT NULL,
     FOREIGN KEY (media_id) REFERENCES media(media_id) ON DELETE CASCADE,
-    FOREIGN KEY (episode_id) REFERENCES episode(episode_id) ON DELETE CASCADE,
     FOREIGN KEY (username) REFERENCES user(username) ON DELETE CASCADE
 );
 
@@ -44,12 +35,10 @@ CREATE TABLE history(
 CREATE TABLE media_history(
     history_id INT NOT NULL,
     media_id INT NOT NULL,
-    episode_id INT,
     watch_date DATE NOT NULL,
     PRIMARY KEY (history_id, media_id),
     FOREIGN KEY (history_id) REFERENCES history(history_id) ON DELETE CASCADE,
-    FOREIGN KEY (media_id) REFERENCES media(media_id) ON DELETE CASCADE,
-    FOREIGN KEY (episode_id) REFERENCES episode(episode_id) ON DELETE CASCADE
+    FOREIGN KEY (media_id) REFERENCES media(media_id) ON DELETE CASCADE
 );
 
 CREATE TABLE list(
@@ -72,9 +61,7 @@ CREATE TABLE rating(
     score INT NOT NULL CHECK (score>0 AND score<=10),
     rating_date DATE NOT NULL,
     media_id INT NOT NULL,
-    episode_id INT,
     username VARCHAR(255) NOT NULL,
     FOREIGN KEY (media_id) REFERENCES media(media_id) ON DELETE CASCADE,
-    FOREIGN KEY (episode_id) REFERENCES episode(episode_id) ON DELETE CASCADE,
     FOREIGN KEY (username) REFERENCES user(username) ON DELETE CASCADE
 );
