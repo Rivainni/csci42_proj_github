@@ -8,12 +8,12 @@ VALUES
 (10, 'T'),
 (11, 'M');
 
-INSERT INTO media (tmdb_id, season_no, episode_no)
+INSERT INTO media (tmdb_id, media_type, season_no, episode_no)
 VALUES
-(10, 1, 1),
-(10, 1, 2),
-(10, 2, 1),
-(10, 2, 2);
+(10, 'E', 1, 1),
+(10, 'E', 1, 2),
+(10, 'E', 2, 1),
+(10, 'E', 2, 2);
 
 INSERT INTO comment (comment_text, comment_date, media_id, username)
 VALUES
