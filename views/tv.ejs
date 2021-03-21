@@ -40,10 +40,6 @@
   </div>
 <h3 class="text-center">Seasons</h3>
 
-      
-      <% for (let i = 1; i <= tvData.number_of_seasons; i++) { %>
-      <% } %>
-
       <div class="accordion" id="accordionEpisodes">
 
       <% for (let i = 1; i <= tvData.number_of_seasons; i++) { %>
@@ -58,12 +54,13 @@
                 <p>Number of Episodes: <%= tvData.seasons[i].episode_count %>
                 <p>Overview 
                 <p><%= tvData.seasons[i].overview %>
+                
 
                 <% var sd = new Date(tvData.seasons[i].air_date) %>
                 <% var seasonDate = `${sd.getMonth()+1}/${sd.getDate()}/${sd.getFullYear()}` %>
                 <p>First Air Date: <%= seasonDate %>
                 
-                <p><a href="/tv/<%= tvData.id %>/<%= i %>/episodeDetail">Episode Guide</a>
+                <p><a href="/tv/<%= tvData.id %>/<%= i %>/<%= tvData.seasons[i].episode_count %>/episodeDetail">Episode Guide</a>
             
             </div>
           </div>

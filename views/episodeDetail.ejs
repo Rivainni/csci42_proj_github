@@ -1,5 +1,5 @@
 <%- include("navbar.ejs")%>
-<h1>Episode Detail Page</h1>
+
 <div class="container">
     <div class="card mb-3"> 
         <div class="row g-0">
@@ -20,10 +20,81 @@
               <p class="card-text">Aired Seasons: <%= tvData[0].number_of_seasons%></p>
               <p class="card-text">Aired Episodes: <%= tvData[0].number_of_episodes%></p>
               <p class="card-text">Language: <%= tvData[0].original_language %></p>
-
+              <p class="card-text">
+                <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                    <button type="button" class="btn btn-secondary">1</button>
+                    <button type="button" class="btn btn-secondary">2</button>
+                  
+                    <div class="btn-group" role="group">
+                      <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle"  data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                       Rating 
+                      </button>
+                      <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                        <a class="dropdown-item" href="#">Dropdown link</a>
+                        <a class="dropdown-item" href="#">Dropdown link</a>
+                      </div>
+                    </div>
+                  </div>
             </div>
           </div>
         </div>
+      </div>
+<h1>Season: <%= tvData[1].season_number %> Episodes</h1>
+<div class="accordion" id="accordionEpisodes">
+
+<% for (let i = 1; i < tvData.length; i++) { %>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="heading<%= i %>">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<%= i %>" aria-expanded="true" aria-controls="collapse<%= i %>">
+          Episode #<%= i %>
+        </button>
+      </h2>
+      <div id="collapse<%= i %>" class="accordion-collapse collapse" aria-labelledby="heading<%= i %>" data-bs-parent="#accordionEpisodes">
+        <div class="accordion-body">
+           
+            <div class="card mb-3"> 
+                <div class="row g-0">
+                  <div class="col-md-4">
+                    <% var image_link = "https://image.tmdb.org/t/p/original" + tvData[i].still_path %>
+                    <img class="img-fluid" src=<%= image_link %> alt="No image available">
+                  </div>
+                  <div class="col-md-8">
+                    <div class="card-body">
+                      <h1 class="card-title"><%= tvData[i].name %></h1>
+                      
+
+                      <p class="card-text"> Overview: </p>
+                      <p class="card-text"> <%= tvData[i].overview %></p>
+                      <% var d = new Date(tvData[i].air_date) %>
+                      <% var date = `${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}` %>
+                      <p class="card-text">Air Date: <%= date %></p>
+                            <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                            <button type="button" class="btn btn-secondary">1</button>
+                            <button type="button" class="btn btn-secondary">2</button>
+                            
+                            <div class="btn-group" role="group">
+                              <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle"  data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                               Rating 
+                              </button>
+                              <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                <a class="dropdown-item" href="#">Dropdown link</a>
+                                <a class="dropdown-item" href="#">Dropdown link</a>
+                              </div>
+                            </div>
+                          </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+        
+        </div>
+      </div>
     </div>
-</div>    
+  <% } %>
+  </div>
+
+
+</div>  
+
 <%- include("footer.ejs")%>

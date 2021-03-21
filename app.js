@@ -105,27 +105,26 @@ app.get('/tv/:tvID/:season/:episodeCount/episodeDetail', async (req,res) => {
     const tvID = req.params.tvID
     const seasonID = req.params.season
     const episodeCount = req.params.episodeCount
-    var tvData = [] 
+    var tvData = []
     var urls = []
     urls.unshift(`https://api.themoviedb.org/3/tv/${tvID}?api_key=f5d0b40e98581b4563c21ee53a7209ee`)
-    for (let i = 0; i < episodeCount; i++) {
-        urls.push(`https://api.themoviedb.org/3/tv/1416/season/${seasonID}/episode/${i+1}?api_key=f5d0b40e98581b4563c21ee53a7209ee&language=en-US`)
+    for (let i = 0; i <= episodeCount; i++) {
+        urls.push(`https://api.themoviedb.org/3/tv/1416/season/${seasonID}/episode/${i + 1}?api_key=f5d0b40e98581b4563c21ee53a7209ee&language=en-US`)
         await axios.get(urls[i], {
             headers: {
-            'Content-Type': 'application/json',
-            'charset': 'utf-8'
+                'Content-Type': 'application/json',
+                'charset': 'utf-8'
             }
-            })
+        })
             .then((res) => {
                 tvData.push(res.data)
             })
             .catch((error) => {
-            console.error(error)
+                console.error(error)
             })
     }
 
-    console.log(tvData)
-    res.render('episodeDetail.ejs', {tvData})
+    res.render('episodeDetail.ejs', { tvData })
 })
 
 
