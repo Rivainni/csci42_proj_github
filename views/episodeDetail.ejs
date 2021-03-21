@@ -4,37 +4,23 @@
     <div class="card mb-3"> 
         <div class="row g-0">
           <div class="col-md-4">
-            <% if (tvData.poster_path != 'null') {var image_link = "https://image.tmdb.org/t/p/original" + tvData.poster_path} %>
+            <% if (tvData[0].poster_path != 'null') {var image_link = "https://image.tmdb.org/t/p/original" + tvData[0].poster_path} %>
             <img class="img-fluid" src=<%= image_link %> alt="No image available">
           </div>
           <div class="col-md-8">
             <div class="card-body">
-              <h1 class="card-title"><%= tvData.name%></h1>
-            <% var year = (new Date(tvData.first_air_date)).getFullYear(); %>
+              <h1 class="card-title"><%= tvData[0].name%></h1>
+            <% var year = (new Date(tvData[0].first_air_date)).getFullYear(); %>
               <p class="card-text"><%= year %></p>
-              <p class="card-text"><%= tvData.tagline %></p>
-              <p class="card-text">Overview: <%= tvData.overview %></p>
-              <% var d = new Date(tvData.first_air_date) %>
+              <p class="card-text"><%= tvData[0].tagline %></p>
+              <p class="card-text">Overview: <%= tvData[0].overview %></p>
+              <% var d = new Date(tvData[0].first_air_date) %>
               <% var date = `${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}` %>
               <p class="card-text">Release Date: <%= date %></p>
-              <p class="card-text">Aired Seasons: <%= tvData.number_of_seasons%></p>
-              <p class="card-text">Aired Episodes: <%= tvData.number_of_episodes%></p>
-              <p class="card-text">Language: <%= tvData.original_language %></p>
-              <p class="card-text">
-                <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-                    <button type="button" class="btn btn-secondary">1</button>
-                    <button type="button" class="btn btn-secondary">2</button>
-                  
-                    <div class="btn-group" role="group">
-                      <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle"  data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                       Rating 
-                      </button>
-                      <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                        <a class="dropdown-item" href="#">Dropdown link</a>
-                        <a class="dropdown-item" href="#">Dropdown link</a>
-                      </div>
-                    </div>
-                  </div>
+              <p class="card-text">Aired Seasons: <%= tvData[0].number_of_seasons%></p>
+              <p class="card-text">Aired Episodes: <%= tvData[0].number_of_episodes%></p>
+              <p class="card-text">Language: <%= tvData[0].original_language %></p>
+
             </div>
           </div>
         </div>
