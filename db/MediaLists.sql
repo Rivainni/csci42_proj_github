@@ -20,6 +20,7 @@ CREATE TABLE media(
 CREATE TABLE comment(
     comment_id INT NOT NULL AUTO_INCREMENT UNIQUE PRIMARY KEY,
     comment_text VARCHAR(255) NOT NULL,
+    comment_date DATE NOT NULL,
     like_no INT NOT NULL DEFAULT 0,
     media_id INT NOT NULL,
     username VARCHAR(255) NOT NULL,

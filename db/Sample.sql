@@ -15,14 +15,14 @@ VALUES
 (10, 2, 1),
 (10, 2, 2);
 
-INSERT INTO comment (comment_text, media_id, username)
+INSERT INTO comment (comment_text, comment_date, media_id, username)
 VALUES
-('10/10 IGN gottem', 1, 'Zuikaku'),
-(':c', 2, 'Shoukaku'),
-('So say we all.', 3, 'Shoukaku'),
-('F', 3, 'Zuikaku'),
-('Sana', 4, 'Shoukaku'),
-('all', 4, 'Zuikaku');
+('10/10 IGN gottem', '2020-01-01', 1, 'Zuikaku'),
+(':c', '2020-01-02', 2, 'Shoukaku'),
+('So say we all.', '2020-01-03', 3, 'Shoukaku'),
+('F', '2020-01-04', 3, 'Zuikaku'),
+('Sana','2020-01-05', 4, 'Shoukaku'),
+('all', '2020-01-06',4, 'Zuikaku');
 
 INSERT INTO history (username)
 VALUES
