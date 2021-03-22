@@ -12,14 +12,16 @@ CREATE TABLE user(
 CREATE TABLE media(
     media_id INT NOT NULL AUTO_INCREMENT UNIQUE PRIMARY KEY,
     tmdb_id INT NOT NULL,
-    media_type CHAR(1) CHECK (media_type='M' OR media_type='T' OR media_type='E'),
-    season_no INT,
-    episode_no INT
+    media_type CHAR(1) NOT NULL CHECK (media_type='M' OR media_type='T' OR media_type='E'),
+    season_no INT NOT NULL DEFAULT -1,
+    episode_no INT NOT NULL DEFAULT -1
 );
 
 CREATE TABLE comment(
     comment_id INT NOT NULL AUTO_INCREMENT UNIQUE PRIMARY KEY,
     comment_text VARCHAR(255) NOT NULL,
+    comment_date DATE NOT NULL,
+    like_no INT NOT NULL DEFAULT 0,
     media_id INT NOT NULL,
     username VARCHAR(255) NOT NULL,
     FOREIGN KEY (media_id) REFERENCES media(media_id) ON DELETE CASCADE,
