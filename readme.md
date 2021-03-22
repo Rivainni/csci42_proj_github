@@ -42,6 +42,24 @@ start mysql server with:
 
 enter `1234` when prompted for a password.
 
+### Windows version
+1. Download the installer from here and run it: https://dev.mysql.com/downloads/mysql/.
+2. Open it again. Run the configuration wizard.
+3. You may have to manually add MySQL to PATH. Just add the bin directory for the server.
+4. Go to the db folder.
+5. Login via cmd in the db folder. Enter password when prompted (I went with 1234).
+```
+mysql -u root -p
+```
+6. Load the schema with:
+```sql
+source MediaLists.sql
+```
+Note that the CREATE and USE commands are in the file, so for the first run you don't need to do those. If you close mysql and already have the database in the server:
+```sql
+USE medialists;
+```
+
 ## Express Configuration
 Express is a node.js package
 MediaList is configured to listen to port 3000.
@@ -81,7 +99,17 @@ Stage changed files to be commited
 Commit changes
 `git commit -m "my first commit"`
 
+Pull from the repo
+`git pull`
 
+Push to the repo
+`git push`
+
+Create new branch
+`git branch <name_of_branch>`
+
+Change branch
+`git checkout <name_of_branch>`
 
 ## Nodemon Installation and Configuration (Optional)
 Nodemon is an optional package.
