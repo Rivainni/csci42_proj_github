@@ -13,8 +13,8 @@ CREATE TABLE media(
     media_id INT NOT NULL AUTO_INCREMENT UNIQUE PRIMARY KEY,
     tmdb_id INT NOT NULL,
     media_type CHAR(1) NOT NULL CHECK (media_type='M' OR media_type='T' OR media_type='E'),
-    season_no INT,
-    episode_no INT
+    season_no INT NOT NULL DEFAULT -1,
+    episode_no INT NOT NULL DEFAULT -1
 );
 
 CREATE TABLE comment(
