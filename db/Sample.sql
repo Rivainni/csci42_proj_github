@@ -13,7 +13,12 @@ VALUES
 (10, 'E', 1, 1),
 (10, 'E', 1, 2),
 (10, 'E', 2, 1),
-(10, 'E', 2, 2);
+(10, 'E', 2, 2),
+(10, 'E', 3, 1);
+
+INSERT INTO media (tmdb_id, media_type)
+VALUES
+(12, 'M');
 
 INSERT INTO comment (comment_text, comment_date, media_id, username)
 VALUES
