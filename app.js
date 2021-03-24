@@ -22,6 +22,7 @@ var mysql = require("mysql");
 
 // Use Axios
 const axios = require('axios');
+const { rejects } = require("assert");
 
 // Connect to MySQL database
 var  db = mysql.createConnection({
@@ -37,6 +38,26 @@ db.query('SELECT "The database is running..." AS status', function (error, resul
     console.log(results[0]);
 });
 
+var active_username = 'sottoms'
+
+// Clear logged in users
+
+/*
+db.query('SELECT username FROM user WHERE login_status=1', function (error, results, fields) {
+    if (error) throw error;
+    if (!results[0]) {
+        console.log ('There is no user logged in');
+    }
+})
+*/
+const requireLogin = (req, res, next) => {
+    if (!active_username) {
+       res.redirect('/login') 
+    }
+   else {
+      next() 
+   }
+}
 
 // Express Routes
 app.listen(3000, () => {
@@ -44,42 +65,74 @@ app.listen(3000, () => {
 })
 
 app.get('/', (req, res) => {
-    res.render('home.ejs')
+    res.render('home.ejs', {active_username})
 })
-
-app.get('/comments', (req, res) => {
-    res.render('comments.ejs')
-})
-
 
 app.get('/episodeDetail', (req, res) => {
-    res.render('episodeDetail.ejs')
+    res.render('episodeDetail.ejs', {active_username})
 })
 
 app.get('/help', (req, res) => {
-    res.render('help.ejs')
+    res.render('help.ejs', {active_username})
 })
 
 
-app.get('/history', (req, res) => {
-    res.render('history.ejs')
+app.get('/history', requireLogin, (req, res) => {
+    res.render('history.ejs', {active_username})
 })
 
 
 app.get('/landing', (req, res) => {
-    res.render('landing.ejs')
+    res.render('landing.ejs', {active_username})
 })
 
-app.get('/listDetail', (req, res) => {
-    res.render('listDetail.ejs')
+app.get('/listDetail', requireLogin, (req, res) => {
+    res.render('listDetail.ejs', {active_username})
 })
 
-app.get('/lists', (req, res) => {
-    res.render('lists.ejs')
+app.get('/lists', requireLogin, (req, res) => {
+    res.render('lists.ejs', {active_username})
 })
 
 app.get('/login', (req, res) => {
-    res.render('login.ejs')
+    res.render('login.ejs', {active_username})
+})
+
+app.post('/login', async (req, res) => {
+    const{userName, password} = req.body;
+
+    db.query(
+        `select * from user where username='${userName}';`
+        , function (error, results, fields) {
+        if (error) throw error;
+        if (!results[0]) {
+            console.log('The user does not exist in the database')
+        } else {
+            if (results[0].pwd == password) {
+                console.log('login successful')
+                db.query(`update user set login_status=0 where login_status=1 and username <> '${userName}'`
+                    , function (error, results, fields) {
+                    if (error) throw error;
+                    active_username = ''
+                    console.log('clearing logged in users before sign-in');
+                });
+                db.query(`update user set login_status=1 where username='${userName}'`, function (error, results, fields) {
+                    if (error) throw error;
+                    console.log('db login user updatedi');
+                    active_username = userName
+                    console.log(`active user is ${active_username}`)
+                    res.redirect('/search')
+                });
+
+            } else {
+                console.log('invalid password')
+            }
+        }
+    });
+
+
+
+    
 })
 
 app.get('/movie/:movieID', async (req, res) => {
@@ -98,7 +151,7 @@ app.get('/movie/:movieID', async (req, res) => {
     console.error(error)
     })
     console.log(movieData)
-    res.render('movie.ejs', {movieData})
+    res.render('movie.ejs', {movieData, active_username})
 })
 
 app.get('/tv/:tvID/:season/:episodeCount/episodeDetail', async (req,res) => {
@@ -124,7 +177,7 @@ app.get('/tv/:tvID/:season/:episodeCount/episodeDetail', async (req,res) => {
             })
     }
 
-    res.render('episodeDetail.ejs', { tvData })
+    res.render('episodeDetail.ejs', { tvData, active_username })
 })
 
 
@@ -132,16 +185,96 @@ app.get('/navbar', (req, res) => {
     res.render('navbar.ejs')
 })
 
-app.get('/profile', (req, res) => {
-    res.render('profile.ejs')
+app.get('/profile', requireLogin, (req, res) => {
+    res.render('profile.ejs', {active_username})
+    
 })
 
-app.get('/ratings', (req, res) => {
-    res.render('ratings.ejs')
+app.post('/profile/updatePassword', requireLogin, (req, res) => {
+    const {userName, password, confirmPassword} = req.body
+    var regExp = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$");
+    
+    if (password == "") {
+        console.log('password is null')
+    } else if (password != confirmPassword) {
+        console.log('password is not equal to confirm password')
+    } else if (!regExp.test(password)) {
+        console.log('password pattern not allowed')
+    } else {
+        db.query(
+            `UPDATE user SET pwd='${password}' WHERE username='${userName}';`
+            , function (error, results, fields) {
+            if (error) throw error;
+            console.log('password updated')
+            res.redirect('/search')
+    });
+    }
+})
+
+    // if firstName AND lastName is not null
+
+app.post('/profile/updateName', requireLogin, (req, res) => {
+    const {userName, firstName, lastName} = req.body
+
+    if (firstName == "" || lastName == "") {
+        console.log("firstName or lastName is null")
+    } else
+    db.query(
+        `UPDATE user SET first_name='${firstName}', last_name='${lastName}' WHERE username='${userName}';`
+        , function (error, results, fields) {
+            if (error) throw error;
+            console.log('name updated')
+    });
+
+
+    res.send(req.body)
+})
+
+
+app.get('/ratings', requireLogin, (req, res) => {
+    res.render('ratings.ejs', {active_username})
 })
 
 app.get('/register', (req, res) => {
-    res.render('register.ejs')
+    res.render('register.ejs', {active_username})
+})
+
+app.post('/register', async (req, res) => {
+    // error handling for user has been created
+    // error handling for passwords not equal
+    // error handling for bad password
+    const {userName, lastName, firstName, password, confirmPassword} = req.body
+    var regExp = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$");
+    
+    console.log('Register form submitted')
+    db.query(
+        `select * from user where username='${userName}';`
+    , function (error, results, fields) {
+        if (error) throw error;
+        if (results[0]) {
+            console.log('user already exists')
+            res.redirect('/register')
+        }  else { 
+        
+        if (password == "") {
+            console.log('password is null')
+        } else if (password != confirmPassword) {
+            console.log('password is not equal to confirm password')
+        } else if (!regExp.test(password)) {
+            console.log('password pattern not allowed')
+        } else {
+        db.query(
+            `INSERT INTO user (username, last_name, first_name,  pwd, login_status) 
+            VALUES ('${userName}', '${lastName}', '${firstName}', '${password}', 1);`
+        , function (error, results, fields) {
+            if (error) throw error;
+            console.log('New User Created')
+            res.redirect('/login')
+        }) 
+        }
+    }
+})     
+
 })
 
 
@@ -167,7 +300,7 @@ app.get('/search', async (req, res) => {
     .catch((error) => {
     console.error(error)
     })
-    res.render('search.ejs', {searchData})
+    res.render('search.ejs', {searchData, active_username})
      
 })
 
@@ -187,7 +320,7 @@ app.get('/tv/:tvID', async (req, res) => {
     console.error(error)
     })
     console.log(tvData)
-    res.render('tv.ejs', {tvData})
+    res.render('tv.ejs', {tvData, active_username})
 })
 
 app.get('*', (req, res) => {

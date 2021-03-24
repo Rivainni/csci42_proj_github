@@ -1,17 +1,17 @@
 <%- include("navbar.ejs")%>
 <main class="form-signin">
-    <form>
+    <form action="/register" method="POST">
       <h1 class="h3 mb-3 fw-normal">Register</h1>
       <label for="inputUsername" class="visually-hidden">Username</label>
-      <input type="username" id="inputUsername" class="form-control" placeholder="Username" required autofocus>
+      <input type="username" name="userName" id="inputUsername" class="form-control" placeholder="Username" required autofocus>
       <label for="inputPassword" class="visually-hidden">Password</label>
-      <input type="password" id="confirmPassword" class="form-control" placeholder="Password" required>
+      <input type="password" name="password" id="confirmPassword" class="form-control" placeholder="Password" required>
       <label for="confirmPassword" class="visually-hidden">Confirm Password</label>
-      <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm Password" required>
+      <input type="password" name="confirmPassword" id="confirmPassword" class="form-control" placeholder="Confirm Password" required>
       <label for="inputFirstName" class="visually-hidden">First Name</label>
-      <input type="firstName" id="inputFirstName" class="form-control" placeholder="First Name" required autofocus>
+      <input type="firstName" name="firstName" id="inputFirstName" class="form-control" placeholder="First Name" required autofocus>
       <label for="inputLastName" class="visually-hidden">Last Name</label>
-      <input type="lastName" id="inputLastName" class="form-control" placeholder="Last Name" required autofocus>
+      <input type="lastName" name="lastName" id="inputLastName" class="form-control" placeholder="Last Name" required autofocus>
       <p></p>
       <button class="w-100 btn btn-lg btn-primary" type="submit">Register</button>
       <p></p>

@@ -146,8 +146,10 @@ Get Movie Details
 https://api.themoviedb.org/3/movie/<movie_id>?api_key=f5d0b40e98581b4563c21ee53a7209ee
 
 Get TV Details
-https://api.themoviedb.org/3/tv/1416?api_key=f5d0b40e98581b4563c21ee53a7209ee&language=en-US
+https://api.themoviedb.org/3/tv/<tv_id>?api_key=f5d0b40e98581b4563c21ee53a7209ee&language=en-US
 
 Get Episode Details
+https://api.themoviedb.org/3/tv/<tv_id>/season/<season_number>/episode/<episode_number>?api_key=f5d0b40e98581b4563c21ee53a7209ee&language=en-US
 
 Multi Search
+https://api.themoviedb.org/3/search/multi?api_key=f5d0b40e98581b4563c21ee53a7209ee&language=en-US&query=<queryString>&page=1&include_adult=false

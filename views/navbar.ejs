@@ -44,12 +44,21 @@
                 <a class="nav-link" href="/help">Help</a>
               </li>
             </ul>
+          </div>
+         
+          <% if (active_username == "") {   %>
           <span class="navbar-text">
             <a class="nav-link" href="/register">Register</a>
           </span>
           <span class="navbar-text">
             <a class="nav-link" href="/login">Login</a>
           </span>
-          </div>
+          <% } else { %>
+          <span class="navbar-text">
+            <%= active_username %>
+          </span>
+
+
+          <% } %>
         </div>
       </nav>

@@ -1,4 +1,3 @@
-CREATE DATABASE medialists;
 USE medialists;
 
 CREATE TABLE user(

@@ -1,19 +1,22 @@
-<%- include("navbar.ejs")%>
+<%- include("navbar.ejs", {active_username})%>
 <main class="form-signin">
-    <form>
+    <form action="/profile/updatePassword" method="post">
       <h1 class="h3 mb-3 fw-normal">Profile</h1>
       <label for="inputUsername" class="visually-hidden">Username</label>
-      <input type="username" id="inputUsername" class="form-control" placeholder="Username" autofocus disabled>
+      <input type="username" name="userName" id="inputUsername" class="form-control" value="<%=active_username%>" autofocus >
       <label for="inputPassword" class="visually-hidden">Password</label>
-      <input type="password" id="inputPassword" class="form-control" placeholder="Password" >
+      <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" >
       <label for="confirmPassword" class="visually-hidden">Confirm Password</label>
-      <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm Password" required>
+      <input type="password" name="confirmPassword" id="confirmPassword" class="form-control" placeholder="Confirm Password">
       <button class="w-100 btn btn-lg btn-primary" type="submit">Update Password</button>
-      <p></p>
+    </form>
+    <form action="/profile/updateName" method="post">
+      <label for="inputUsername2" class="visually-hidden">Username</label>
+      <input type="username" name="userName" id="inputUsername2" class="invisible form-control" value="<%=active_username%>" autofocus >
       <label for="inputFirstName" class="visually-hidden">First Name</label>
-      <input type="firstName" id="inputFirstName" class="form-control" placeholder="First Name" autofocus >
+      <input type="firstName" name="firstName" id="inputFirstName" class="form-control" placeholder="First Name" autofocus >
       <label for="inputFirstName" class="visually-hidden">Last Name</label>
-      <input type="lastName" id="inputLastName" class="form-control" placeholder="Last Name" autofocus >
+      <input type="lastName" name="lastName" id="inputLastName" class="form-control" placeholder="Last Name" autofocus >
       <p></p>
       <button class="w-100 btn btn-lg btn-primary" type="submit">Update Name</button>
       <p></p>
