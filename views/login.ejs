@@ -1,19 +1,93 @@
 <%- include("navbar.ejs", {active_username})%>
-<main class="form-signin">
-    <form action="/login" method="post">
-      <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
-      <label for="inputUsername" class="visually-hidden">Username</label>
-      <input type="username" name="userName" id="inputUsername" class="form-control" placeholder="Username" required autofocus>
-      <label for="inputPassword" class="visually-hidden">Password</label>
-      <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
-      <div class="alert alert-danger" role="alert">
-        This error message will be returned...
-      </div>
-      <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
-     
-      <a href="/register">Need to register?</a>
-    </form>
-  </main>
+
+<!--main class="form-signin">
+  <form action="/login" method="post">
+    <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+    <label for="inputUsername" class="visually-hidden">Username</label>
+    <input type="username" name="userName" id="inputUsername" class="form-control" placeholder="Username" required autofocus>
+    <label for="inputPassword" class="visually-hidden">Password</label>
+    <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
+    <div class="alert alert-danger" role="alert">
+      This error message will be returned...
+    </div>
+    <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+   
+    <a href="/register">Need to register?</a>
+  </form>
+</main>
+</div-->
+
+
+<style>
+  .back {
+      background: #e2e2e2;
+      width: 100%;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+  }
+
+  .div-center {
+  width: 400px;
+  height: 600px;
+  background-color: #fff;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  max-width: 100%;
+  max-height: 100%;
+  overflow: auto;
+  padding: 1em 2em;
+  border-bottom: 2px solid #ccc;
+  display: table;
+  }
+
+  div.content {
+  display: table-cell;
+  vertical-align: middle;
+  }
+
+</style>
+
+
+
+<main class="form-signin"></main>
+  <div class="back">  
+  <div class="div-center">
+    <div class="content">
+
+
+      <h1 class="h1 mb-3 fw-normal">Sign In</h1>
+      <hr />
+      <form action="/login" method="post">
+        <div class="form-group mt-3">
+          <label for="inputUsername" class="visually-hidden">Username</label>
+          <input type="username" name="userName" id="inputUsername" class="form-control form-control-lg" placeholder="Username" required autofocus>
+        </div>
+        <div class="form-group mt-3">
+          <label for="inputPassword" class="visually-hidden">Password</label>
+          <input type="password" name="password" id="inputPassword" class="form-control form-control-lg" placeholder="Password" required>
+        </div>
+
+        <div class="alert alert-danger mt-3" role="alert">
+          This error message will be returned...
+        </div>
+
+
+        <button type="submit" class="btn w-100 btn-lg btn-outline-danger mb-3">Sign In</button>
+        
+        <p>New to MediaLists?</p>
+        <button type="button" class="btn btn-link"><a href="/register">Need to register?</a></button> 
+       
+
+      </form>
+
+  </div>
+</main>
 </div>
+
 
 <%- include("footer.ejs")%>
