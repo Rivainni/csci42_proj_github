@@ -1,3 +1,176 @@
 <%- include("navbar.ejs", {active_username})%>
 <h1>Help Page</h1>
+
+<div class="accordion accordion-flush" id="accordionFlushExample">
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="flush-headingOne">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+          <h5>How do users register and login?</h5>
+        </button>
+      </h2>
+      <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+        <div class="accordion-body">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">• Users register by signing up and providing the required information such as an email address, username, password and a tick mark on accepting the terms of use</li>
+                <li class="list-group-item">• Users login by providing their email and password</li>                
+            </ul>
+            
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="flush-headingTwo">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+            <h5>How do users navigate the site when logged in?</h5>    
+        </button>
+      </h2>
+      <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+        <div class="accordion-body">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">• Users can navigate with the navbar where all of the tabs for the main parts of the application are shown</li>              
+            </ul>
+            
+        </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="flush-headingThree">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+            <h5>How do users search? What can they search for?</h5>    
+        </button>
+      </h2>
+      <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
+        <div class="accordion-body">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">• Users search using the search bar in the top left corner of the screen when they login to the site</li>
+                <li class="list-group-item">• They can search for the titles of certain media that is available in the site</li>
+                <li class="list-group-item">• Users login by providing their email and password</li>                  
+            </ul>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="flush-headingFour">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFour" aria-expanded="false" aria-controls="flush-collapseFour">
+              <h5>What can they do when results show up on search?</h5>    
+          </button>
+        </h2>
+        <div id="flush-collapseFour" class="accordion-collapse collapse" aria-labelledby="flush-headingFour" data-bs-parent="#accordionFlushExample">
+          <div class="accordion-body">
+              <ul class="list-group list-group-flush">
+                  <li class="list-group-item">• They can click on the search results and it will take them to the details screen for the corresponding media piece that they clicked</li>
+                  <li class="list-group-item">• Users also have the option to add the media to their own lists</li>            
+              </ul>
+          </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="flush-headingFive">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFive" aria-expanded="false" aria-controls="flush-collapseFive">
+              <h5>What happens when they go to the Movie Page? What can they do?</h5>    
+          </button>
+        </h2>
+        <div id="flush-collapseFive" class="accordion-collapse collapse" aria-labelledby="flush-headingFive" data-bs-parent="#accordionFlushExample">
+          <div class="accordion-body">
+              <ul class="list-group list-group-flush">
+                  <li class="list-group-item">• The users will be able to see details about the movie and also its movie poster</li>
+                  <li class="list-group-item">• Details such as the director, writer, release date, language of movie, its genre and a short description</li>            
+                  <li class="list-group-item">• Users would also have the option to add the movie to their lists, history, and to rate it</li>   
+              </ul>
+          </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="flush-headingSix">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseSix" aria-expanded="false" aria-controls="flush-collapseSix">
+              <h5>What happens when they go to the TV Page? What can they do?</h5>    
+          </button>
+        </h2>
+        <div id="flush-collapseSix" class="accordion-collapse collapse" aria-labelledby="flush-headingSix" data-bs-parent="#accordionFlushExample">
+          <div class="accordion-body">
+              <ul class="list-group list-group-flush">
+                  <li class="list-group-item">• The users will be able to see details about the tv show and also its tv poster</li>
+                  <li class="list-group-item">• Details such as the director, writer, release date, language of tv show, its genre, related seasons and a short description</li>            
+                  <li class="list-group-item">• Users would also have the option to add the tv show their lists, history, and to rate it</li>   
+                  <li class="list-group-item">• Users may also chose to see the other episodes based on the season released by click on the episode list under the list of seasons</li>   
+              </ul>
+          </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="flush-headingSeven">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseSeven" aria-expanded="false" aria-controls="flush-collapseSeven">
+              <h5>What happens when they go to the Episode Page? What can they do?</h5>    
+          </button>
+        </h2>
+        <div id="flush-collapseSeven" class="accordion-collapse collapse" aria-labelledby="flush-headingSeven" data-bs-parent="#accordionFlushExample">
+          <div class="accordion-body">
+              <ul class="list-group list-group-flush">
+                  <li class="list-group-item">• The users will be able to see details about the tv show season and also its season poster</li>
+                  <li class="list-group-item">• Related episodes from that season will be listed </li>            
+                  <li class="list-group-item">• Users would also have the option to add the tv show episode in their lists, history, and to rate it</li> 
+              </ul>
+          </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="flush-headingEight">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseEight" aria-expanded="false" aria-controls="flush-collapseEight">
+              <h5>How do lists work?</h5>    
+          </button>
+        </h2>
+        <div id="flush-collapseEight" class="accordion-collapse collapse" aria-labelledby="flush-headingEight" data-bs-parent="#accordionFlushExample">
+          <div class="accordion-body">
+              <ul class="list-group list-group-flush">
+                  <li class="list-group-item">• You can add individual media to lists of your own choosing</li>
+                  <li class="list-group-item">• Each list can contain Movies, TV Shows, and even episodes under any TV Show </li>            
+                  <li class="list-group-item">• These items can be added or removed at any time</li> 
+              </ul>
+          </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="flush-headingNine">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseNine" aria-expanded="false" aria-controls="flush-collapseNine">
+              <h5>What happens when they go to the Lists and Lists Detail Page? What can they do? </h5>    
+          </button>
+        </h2>
+        <div id="flush-collapseNine" class="accordion-collapse collapse" aria-labelledby="flush-headingNine" data-bs-parent="#accordionFlushExample">
+          <div class="accordion-body">
+              <ul class="list-group list-group-flush">
+                  <li class="list-group-item">• tbd</li>
+                  <li class="list-group-item">• tbd </li>            
+                  <li class="list-group-item">• tbd</li> 
+              </ul>
+          </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="flush-headingTen">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTen" aria-expanded="false" aria-controls="flush-collapseTen">
+              <h5>What happens when they go to the Watch History Page? What can they do? How does watch history work?</h5>    
+          </button>
+        </h2>
+        <div id="flush-collapseTen" class="accordion-collapse collapse" aria-labelledby="flush-headingTen" data-bs-parent="#accordionFlushExample">
+          <div class="accordion-body">
+              <ul class="list-group list-group-flush">
+                  <li class="list-group-item">• tbd</li>
+                  <li class="list-group-item">• tbd </li>            
+                  <li class="list-group-item">• tbd</li> 
+              </ul>
+          </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="flush-headingEleven">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseEleven" aria-expanded="false" aria-controls="flush-collapseEleven">
+              <h5>How does Ratings work? </h5>    
+          </button>
+        </h2>
+        <div id="flush-collapseEleven" class="accordion-collapse collapse" aria-labelledby="flush-headingEleven" data-bs-parent="#accordionFlushExample">
+          <div class="accordion-body">
+              <ul class="list-group list-group-flush">
+                  <li class="list-group-item">• tbd</li>
+                  <li class="list-group-item">• tbd </li>            
+                  <li class="list-group-item">• tbd</li> 
+              </ul>
+          </div>
+    </div>
+
+
+
+  </div>
+
+
 <%- include("footer.ejs")%>
