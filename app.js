@@ -145,6 +145,12 @@ app.post('/lists/deleteList', requireLogin, (req, res) => {
         res.redirect(fromURL)
         }
     });
+    db.query(`delete from media_list where list_id='${list_id}';`, function (error, results, fields) {
+        if (error) {throw error;}
+        else {
+        res.redirect(fromURL)
+        }
+    });
 })
 
 app.get('/lists/:listid', requireLogin, async (req, res) => {
@@ -167,12 +173,12 @@ app.get('/lists/:listid', requireLogin, async (req, res) => {
             console.log(listData)
             
             for (i = 0; i < listData.length; i++) {
-                if (listData[0].media_type=="M") {    
+                if (listData[i].media_type=="M") {    
                 mediaURL = `https://api.themoviedb.org/3/movie/${listData[i].tmdb_id}?api_key=f5d0b40e98581b4563c21ee53a7209ee`
                 }
-                else if (listData[0].media_type=="T") {
+                else if (listData[i].media_type=="T") {
                     mediaURL = `https://api.themoviedb.org/3/tv/${listData[i].media_id}?api_key=f5d0b40e98581b4563c21ee53a7209ee`
-                } else if (listData[0].media_type=="E") {
+                } else if (listData[i].media_type=="E") {
                     mediaURL = `https://api.themoviedb.org/3/tv/${listData[i].media_id}/season/${listData[i].season_no}/episode/${listData[i].episode_no}?api_key=f5d0b40e98581b4563c21ee53a7209ee&language=en-US`
                 }
                 
@@ -196,7 +202,9 @@ app.get('/lists/:listid', requireLogin, async (req, res) => {
 
         } finally {
           await db.close();
-        res.send({listData, mediaData, active_username})
+          console.log(mediaData)
+
+        res.render("listDetail.ejs", {listData, mediaData, active_username})
         }
       })()
 

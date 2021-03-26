@@ -1,3 +1,133 @@
 <%- include("navbar.ejs", {active_username})%>
 <h1>List Detail Page</h1>
+
+
+
+
+<% for (i = 0; i < mediaData.length; i++) { %>
+ <%   console.log(mediaData[i]) %>
+<li><%= mediaData[i].title %><%= mediaData[i].name %>, <%= listData[i].media_type%></li>
+
+<% } %>
+<div class="container">
+    <div class="row">
+   
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div class="p-2 align-middle">
+                        <h4> <%= listData[0].list_name %>   </h4>
+                    </div>
+
+                    <div class="p-2">                     
+                    </div>
+
+                    
+                    <!-- DELETE Button trigger modal -->
+                        <button class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal<%= data.list_id %>"> 
+                            Delete List
+                        </button>       
+                                <!-- Modal -->
+                                <div class="modal fade" id="exampleModal<%= data.list_id %>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel<%= data.list_id %>" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel<%= data.list_id %>">Confirm Delete</h5>                                          
+                                    </div>
+                                    <div class="modal-body">
+                                        Are you sure you want to delete this list and all related to it?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                        <form action="/lists/deleteList" method="post" name="deleteListForm<%= data.list_id %>">
+                                        <button type="submit" class="btn btn-primary">Yes</button>
+                                        <input type="hidden" name="userName" value="<%= active_username %>" class="visually-hidden">
+                                        <input type="hidden" name="list_id" value="<%= data.list_id %>" class="visually-hidden">
+                                        </form>
+                                    </div>
+                                    </div>
+                                </div>
+                                </div>
+
+                </div>
+                
+            </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+<% for (i = 0; i < mediaData.length; i++) { %>
+    <% var mediaTypeParse = '' %>
+    <% if (listData[i].media_type == "M") { mediaTypeParse = 'movie' } else if (listData[i].media_type == "T") {mediaTypeParse = 'tv'} else {mediaTypeParse = 'episode'}%> 
+
+    <div class="row">
+
+    <div class="col-md-4">
+    <div class="card">
+        <% if (mediaData[i].poster_path != 'null') {var image_link = "https://image.tmdb.org/t/p/original" + mediaData[i].poster_path %>
+        <% } else {var image_link = "https://image.tmdb.org/t/p/original" + mediaData[i].still_path} %>
+        <img class="img-fluid" src=<%= image_link %> alt="No image available">
+
+      <div class="card-body">
+        <p class="card-text text-center"><small class="btn btn-danger" style="pointer-events: none">
+            <%= mediaTypeParse %></small></p>
+     
+
+        <%      if (mediaTypeParse == 'tv') { %>
+            <h5 class="card-title"><%= mediaData[i].name %></h5>
+            <% var year = (new Date(mediaData[i].first_air_date)).getFullYear(); %>
+        <% }    else if (mediaTypeParse == 'movie' ) { %>
+            <h5 class="card-title"><%= mediaData[i].title %></h5>
+            <% var year = (new Date(mediaData[i].release_date)).getFullYear(); %>
+        <% }    else if (mediaTypeParse == 'episode') {%>
+             <h5 class="card-title"><%= mediaData[i].name %></h5>
+             <% var year = (new Date(mediaData[i].air_date)).getFullYear();} %>
+            <p class="card-text"><%= year %></p>
+
+        <p class="card-text">
+            <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                <button type="button" class="btn btn-secondary">1</button>
+                <button type="button" class="btn btn-secondary">2</button>
+              
+                <div class="btn-group" role="group">
+                  <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle"  data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                   Rating 
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                    <a class="dropdown-item" href="#">Dropdown link</a>
+                    <a class="dropdown-item" href="#">Dropdown link</a>
+                  </div>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-danger " data-target="add">Delete from List</button>                        
+                </div>
+
+
+
+              </div>
+            </div>
+            
+
+
+
+      </div>
+    </div>
+
+    </div>
+<% } %>
+    </div>
+
+
+
+
+
 <%- include("footer.ejs")%>
