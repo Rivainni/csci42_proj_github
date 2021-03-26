@@ -17,20 +17,43 @@ app.use(express.static(path.join(__dirname, 'public')))
 // Use EJS
 app.set('view engine', 'ejs');
 
-// Use MySQL
-var mysql = require("mysql");
+// Use MySQL and util packages
+const util = require('util');
+const mysql = require("mysql");
+
+
 
 // Use Axios
 const axios = require('axios');
 const { rejects } = require("assert");
+const { hasUncaughtExceptionCaptureCallback } = require("process");
 
 // Connect to MySQL database
-var  db = mysql.createConnection({
-host: 'localhost',
-user: 'root',
-password: '1234',
-database: 'medialists',
-});
+    var  db = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: '1234',
+    database: 'medialists',
+    });
+
+function makeDb () {
+    var  connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: '1234',
+    database: 'medialists',
+    });
+
+    return {
+        query(sql, args) {
+            return util.promisify(connection.query)
+            .call(connection, sql, args);
+        },
+        close() {
+            return util.promisify(connection.end).call(connection)
+        }
+    }
+}
 
 // Test Database Query
 db.query('SELECT "The database is running..." AS status', function (error, results, fields) {
@@ -38,7 +61,7 @@ db.query('SELECT "The database is running..." AS status', function (error, resul
     console.log(results[0]);
 });
 
-var active_username = 'sottoms'
+var active_username = 'Zuikaku'
 
 // Clear logged in users
 
@@ -91,8 +114,95 @@ app.get('/listDetail', requireLogin, (req, res) => {
 })
 
 app.get('/lists', requireLogin, (req, res) => {
-    res.render('lists.ejs', {active_username})
+    db.query(`select list_id, list_name from list where username='${active_username}'`, function (error, results, fields) {
+        if (error) {throw error;}
+        else {
+        var listData = results
+        console.log(results)
+        res.render('lists.ejs', {listData, active_username})
+        }
+    });
 })
+app.post('/lists/addNewList', requireLogin, (req, res) => {
+    const {newLabelName, userName} = req.body
+    var fromURL = req.header('Referer') || '/lists'
+
+    db.query(`insert into list(list_name, username) values ('${newLabelName}','${userName}');`, function (error, results, fields) {
+        if (error) {throw error;}
+        else {
+        res.redirect(fromURL)
+        }
+    });
+})
+
+app.post('/lists/deleteList', requireLogin, (req, res) => {
+    const {userName, list_id} = req.body
+    var fromURL = req.header('Referer') || '/lists'
+
+    db.query(`delete from list where list_id='${list_id}' and username='${userName}';`, function (error, results, fields) {
+        if (error) {throw error;}
+        else {
+        res.redirect(fromURL)
+        }
+    });
+})
+
+app.get('/lists/:listid', requireLogin, async (req, res) => {
+    const listID = req.params.listid
+    var mediaData = []
+    var mediaURL = ''
+    var listData = []
+
+    const db = makeDb();
+    (async () => {
+        try {
+          const results = await db.query(
+            `
+            SELECT *
+            FROM media, media_list, list
+            WHERE list.username='${active_username}' AND media_list.list_id=${listID} AND media_list.media_id=media.media_id and media_list.list_id=list.list_id;
+            `
+            );
+            listData = results
+            console.log(listData)
+            
+            for (i = 0; i < listData.length; i++) {
+                if (listData[0].media_type=="M") {    
+                mediaURL = `https://api.themoviedb.org/3/movie/${listData[i].tmdb_id}?api_key=f5d0b40e98581b4563c21ee53a7209ee`
+                }
+                else if (listData[0].media_type=="T") {
+                    mediaURL = `https://api.themoviedb.org/3/tv/${listData[i].media_id}?api_key=f5d0b40e98581b4563c21ee53a7209ee`
+                } else if (listData[0].media_type=="E") {
+                    mediaURL = `https://api.themoviedb.org/3/tv/${listData[i].media_id}/season/${listData[i].season_no}/episode/${listData[i].episode_no}?api_key=f5d0b40e98581b4563c21ee53a7209ee&language=en-US`
+                }
+                
+                await axios.get(mediaURL
+                    , {
+                headers: {
+                'Content-Type': 'application/json',
+                'charset': 'utf-8'
+                }
+                })
+                .then((res) => {
+                    mediaData.push(res.data)
+                })
+                .catch((error) => {
+                console.error(error)
+                })
+            
+            }
+
+
+
+        } finally {
+          await db.close();
+        res.send({listData, mediaData, active_username})
+        }
+      })()
+
+    
+})
+
 
 app.get('/login', (req, res) => {
     res.render('login.ejs', {active_username})
@@ -129,11 +239,21 @@ app.post('/login', async (req, res) => {
             }
         }
     });
-
-
-
-    
+  
 })
+
+app.get('/logout', (req, res) => {
+   
+   db.query(`update user set login_status=0 where login_status=1;`
+   , function (error, results, fields) {
+   if (error) throw error;
+   active_username = ''
+   console.log('user logged out');
+    res.render('logout.ejs', {active_username:''})
+}); 
+
+})
+
 
 app.get('/movie/:movieID', async (req, res) => {
     const movieID = req.params.movieID;
@@ -326,7 +446,3 @@ app.get('/tv/:tvID', async (req, res) => {
 app.get('*', (req, res) => {
     res.send('<h1>MediaLists Page not available.</h1>.')
 })
-
-// API Calls
-
- 

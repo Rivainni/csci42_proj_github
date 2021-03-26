@@ -54,9 +54,17 @@
             <a class="nav-link" href="/login">Login</a>
           </span>
           <% } else { %>
-          <span class="navbar-text">
-            <%= active_username %>
-          </span>
+
+          <li class="nav-item dropdown">
+            <a class="nav-item btn btn-dark dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <%= active_username %>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="/profile">Profile</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="/logout">Logout</a>
+            </div>
+          </li>
 
 
           <% } %>
