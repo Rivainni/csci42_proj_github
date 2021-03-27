@@ -2,13 +2,6 @@
 <h1>List Detail Page</h1>
 
 
-
-
-<% for (i = 0; i < mediaData.length; i++) { %>
- <%   console.log(mediaData[i]) %>
-<li><%= mediaData[i].title %><%= mediaData[i].name %>, <%= listData[i].media_type%></li>
-
-<% } %>
 <div class="container">
     <div class="row">
    
@@ -25,25 +18,25 @@
 
                     
                     <!-- DELETE Button trigger modal -->
-                        <button class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal<%= data.list_id %>"> 
+                        <button class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal<%= listData[0].list_id %>"> 
                             Delete List
                         </button>       
                                 <!-- Modal -->
-                                <div class="modal fade" id="exampleModal<%= data.list_id %>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel<%= data.list_id %>" aria-hidden="true">
+                                <div class="modal fade" id="exampleModal<%= listData[0].list_id %>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel<%= listData[0].list_id %>" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel<%= data.list_id %>">Confirm Delete</h5>                                          
+                                        <h5 class="modal-title" id="exampleModalLabel<%= listData[0].list_id %>">Confirm Delete</h5>                                          
                                     </div>
                                     <div class="modal-body">
                                         Are you sure you want to delete this list and all related to it?
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                        <form action="/lists/deleteList" method="post" name="deleteListForm<%= data.list_id %>">
+                                        <form action="/lists/deleteList" method="post" name="deleteListForm<%= listData[0].list_id %>">
                                         <button type="submit" class="btn btn-primary">Yes</button>
                                         <input type="hidden" name="userName" value="<%= active_username %>" class="visually-hidden">
-                                        <input type="hidden" name="list_id" value="<%= data.list_id %>" class="visually-hidden">
+                                        <input type="hidden" name="list_id" value="<%= listData[0].list_id %>" class="visually-hidden">
                                         </form>
                                     </div>
                                     </div>

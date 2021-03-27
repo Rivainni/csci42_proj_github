@@ -1,3 +1,68 @@
 <%- include("navbar.ejs", {active_username})%>
 <h1> Ratings Page</h1>
+
+<% for (i = 0; i < ratingData.length; i++) { %>
+<% var mediaTypeParse = '' %>
+<% if (ratingData[i].media_type == "M") { mediaTypeParse = 'movie' } else if (ratingData[i].media_type == "T") {mediaTypeParse = 'tv'} else {mediaTypeParse = 'episode'}%> 
+
+<div class="row">
+
+<div class="col-md-4">
+<div class="card">
+    <% if (mediaData[i].poster_path != 'null') {var image_link = "https://image.tmdb.org/t/p/original" + mediaData[i].poster_path %>
+    <% } else {var image_link = "https://image.tmdb.org/t/p/original" + mediaData[i].still_path} %>
+    <img class="img-fluid" src=<%= image_link %> alt="No image available">
+
+    <div class="card-body">
+    <p class="card-text text-center"><small class="btn btn-danger" style="pointer-events: none">
+        <%= mediaTypeParse %></small></p>
+    
+
+    <%      if (mediaTypeParse == 'tv') { %>
+        <h5 class="card-title"><%= mediaData[i].name %></h5>
+        <% var year = (new Date(mediaData[i].first_air_date)).getFullYear(); %>
+    <% }    else if (mediaTypeParse == 'movie' ) { %>
+        <h5 class="card-title"><%= mediaData[i].title %></h5>
+        <% var year = (new Date(mediaData[i].release_date)).getFullYear(); %>
+    <% }    else if (mediaTypeParse == 'episode') {%>
+            <h5 class="card-title"><%= mediaData[i].name %></h5>
+            <% var year = (new Date(mediaData[i].air_date)).getFullYear();} %>
+        <p class="card-text"><%= year %></p>
+        <p class="card-text">Rating: <%= ratingData[i].score%></p>
+
+    <p class="card-text">
+        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+            <button type="button" class="btn btn-secondary">1</button>
+            <button type="button" class="btn btn-secondary">2</button>
+            
+            <div class="btn-group" role="group">
+                <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle"  data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Rating 
+                </button>
+                <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                <a class="dropdown-item" href="#">Dropdown link</a>
+                <a class="dropdown-item" href="#">Dropdown link</a>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-danger " data-target="add">Delete from List</button>                        
+            </div>
+
+
+
+            </div>
+        </div>
+        
+
+
+
+    </div>
+</div>
+
+</div>
+<% } %>
+</div>
+
+
+
 <%- include("footer.ejs")%>
