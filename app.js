@@ -241,10 +241,11 @@ app.get('/lists/:listid', requireLogin, async (req, res) => {
 
         } finally {
           await db.close();
+          res.render("listDetail.ejs", {listData, mediaData, active_username})
+
           console.log(mediaData)
 
 
-        res.send("listDetail.ejs", {listData, mediaData, active_username})
         }
       })()
 
@@ -547,7 +548,6 @@ app.get('/search', async (req, res) => {
     .catch((error) => {
     console.error(error)
     })
-    console.log(mediaListData)
     res.render('search.ejs', {searchData, allLists, active_username})
      
 })
