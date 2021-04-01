@@ -29,7 +29,7 @@ CREATE TABLE comment(
 
 CREATE TABLE history(
     history_id INT NOT NULL AUTO_INCREMENT UNIQUE PRIMARY KEY,
-    username VARCHAR(255) NOT NULL UNIQUE,
+    username VARCHAR(255) NOT NULL,
     FOREIGN KEY (username) references user(username) ON DELETE CASCADE
 );
 
