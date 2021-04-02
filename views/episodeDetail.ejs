@@ -21,20 +21,7 @@
               <p class="card-text">Aired Episodes: <%= tvData[0].number_of_episodes%></p>
               <p class="card-text">Language: <%= tvData[0].original_language %></p>
               <p class="card-text">
-                <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-                    <button type="button" class="btn btn-secondary">1</button>
-                    <button type="button" class="btn btn-secondary">2</button>
-                  
-                    <div class="btn-group" role="group">
-                      <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle"  data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                       Rating 
-                      </button>
-                      <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                        <a class="dropdown-item" href="#">Dropdown link</a>
-                        <a class="dropdown-item" href="#">Dropdown link</a>
-                      </div>
-                    </div>
-                  </div>
+
             </div>
           </div>
         </div>
@@ -68,33 +55,129 @@
                       <% var d = new Date(tvData[i].air_date) %>
                       <% var date = `${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}` %>
                       <p class="card-text">Air Date: <%= date %></p>
-                            <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-                            <button type="button" class="btn btn-secondary">1</button>
-                            <button type="button" class="btn btn-secondary">2</button>
-                            
-                            <div class="btn-group" role="group">
-                              <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle"  data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                               Rating 
-                              </button>
-                              <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                <a class="dropdown-item" href="#">Dropdown link</a>
-                                <a class="dropdown-item" href="#">Dropdown link</a>
-                              </div>
-                            </div>
-                          </div>
-                    </div>
+
+                      <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+
+                        <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#listModal<%= tvData[i].id %>"> 
+                        Add To List 
+                        </button>    
+        
+                        <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#historyModal<%= tvData[i].id %>"> 
+                        Watched 
+                        </button>    
+        
+                        <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#rateModal<%= tvData[i].id %>"> 
+                        Rate 
+                        </button> 
+        
+            <!-- List Modal -->
+            <div class="modal fade" id="listModal<%= tvData[i].id %>" tabindex="-1" role="dialog" aria-labelledby="listModalLabel<%= tvData[i].id %>" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                  <div class="modal-header">
+                      <h5 class="modal-title" id="listModalLabel<%= tvData[i].id %>">Add To List</h5>                                          
                   </div>
-                </div>
+                  <div class="modal-body">
+                      <form action="/lists/addMediaToList" method="post" >
+                        <div class="form-group">
+                          <label for="addMediaToList">Select list to add media:</label>
+                          <select class="form-control" name = "list_id" id="addMediaToList" >
+                        <% for (j = 0; j < allLists.length; j++) {%>
+                            <option value = "<%= allLists[j].list_id %>"><%= allLists[j].list_name %></option>
+                            <% } %>
+
+                          </select>
+                          <input type="hidden" name="media_type" value="E" class="visually-hidden">
+
+                          <input type="hidden" name="season_no" value="<%= tvData[i].season_number %>" class="visually-hidden">
+                          <input type="hidden" name="episode_no" value="<%= tvData[i].episode_number %>" class="visually-hidden">
+                          <input type="hidden" name="userName" value="<%= active_username %>" class="visually-hidden">
+                          <input type="hidden" name="tmdb_id" value="<%= tvData[0].id %>" class="visually-hidden">
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Yes</button>
+                      </form>  
+
+                  </div>
+                  </div>
+                  </div>
+                  </div>
               </div>
 
-        
+
+
+
+              
+
+                    </div>
+
+   <!-- History Modal -->
+   <div class="modal fade" id="historyModal<%= tvData[i].id %>" tabindex="-1" role="dialog" aria-labelledby="historyModalLabel<%= tvData[i].id %>" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="historyModalLabel<%= tvData[i].id %>">Add to watched?</h5>                                          
         </div>
-      </div>
+        <div class="modal-body">
+        Would you like to track this item as watched?
+            <form action="/history/addMediaToHistory" method="post" >
+                <input type="hidden" name="media_type" value="E" class="visually-hidden">
+                <input type="hidden" name="season_no" value="<%= tvData[i].season_number %>" class="visually-hidden">
+                <input type="hidden" name="episode_no" value="<%= tvData[i].episode_number %>" class="visually-hidden">
+                <input type="hidden" name="userName" value="<%= active_username %>" class="visually-hidden">
+                <input type="hidden" name="tmdb_id" value="<%= tvData[0].id %>" class="visually-hidden">
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Yes</button>
+            </form>  
+        </div>
+        </div>
+        </div>
     </div>
-  <% } %>
   </div>
+   <!-- Rate Modal -->
+   <div class="modal fade" id="rateModal<%= tvData[i].id %>" tabindex="-1" role="dialog" aria-labelledby="rateModalLabel<%= tvData[i].id %>" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="rateModalLabel<%= tvData[i].id %>">Rate</h5>                                          
+        </div>
+        <div class="modal-body">
+            <form action="/ratings/addMediaRating" method="post" >
+              <div class="form-group">
+                <label for="addMediaRating">Select Rating:</label>
+                <select class="form-control" name = "score" id="addMediaRating" >
+              <% for (j = 0; j <= 10; j++) {%>
+                  <option value = "<%= j %>"><%= j %></option>
+              <% } %>
+                </select>
+                <input type="hidden" name="media_type" value="E" class="visually-hidden">
+                <input type="hidden" name="season_no" value="<%= tvData[i].season_number %>" class="visually-hidden">
+                <input type="hidden" name="episode_no" value="<%= tvData[i].episode_number %>" class="visually-hidden">
+                <input type="hidden" name="userName" value="<%= active_username %>" class="visually-hidden">
+                <input type="hidden" name="tmdb_id" value="<%= tvData[0].id %>" class="visually-hidden">
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Yes</button>
+            </form>  
+        </div>
+        </div>
+        </div>
+    </div>
 
 
-</div>  
 
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<% } %>
+</div>
+</div>
 <%- include("footer.ejs")%>

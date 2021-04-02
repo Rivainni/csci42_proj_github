@@ -9,7 +9,7 @@
 
 <div class="col-md-4">
 <div class="card">
-    <% if (mediaData[i].poster_path != 'null') {var image_link = "https://image.tmdb.org/t/p/original" + mediaData[i].poster_path %>
+    <% if (mediaData[i].poster_path) {var image_link = "https://image.tmdb.org/t/p/original" + mediaData[i].poster_path %>
     <% } else {var image_link = "https://image.tmdb.org/t/p/original" + mediaData[i].still_path} %>
     <img class="img-fluid" src=<%= image_link %> alt="No image available">
 

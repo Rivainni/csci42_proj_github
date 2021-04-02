@@ -28,6 +28,14 @@
                 Add To List 
                 </button>    
 
+                <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#historyModal<%= data.id %>"> 
+                Watched 
+                </button>    
+
+                <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#rateModal<%= data.id %>"> 
+                Rate 
+                </button> 
+
     <!-- List Modal -->
     <div class="modal fade" id="listModal<%= data.id %>" tabindex="-1" role="dialog" aria-labelledby="listModalLabel<%= data.id %>" aria-hidden="true">
       <div class="modal-dialog" role="document">
@@ -44,7 +52,42 @@
                     <option value = "<%= allLists[j].list_id %>"><%= allLists[j].list_name %></option>
                 <% } %>
                   </select>
+                  <% if (data.media_type == 'movie') { %>
                   <input type="hidden" name="media_type" value="M" class="visually-hidden">
+                  <% } else { %>
+                  <input type="hidden" name="media_type" value="T" class="visually-hidden">
+                  <% } %>
+                  <input type="hidden" name="season_no" value="-1" class="visually-hidden">
+                  <input type="hidden" name="episode_no" value="-1" class="visually-hidden">
+                  <input type="hidden" name="userName" value="<%= active_username %>" class="visually-hidden">
+                  <input type="hidden" name="tmdb_id" value="<%= data.id %>" class="visually-hidden">
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary">Yes</button>
+              </form>  
+          </div>
+          </div>
+          </div>
+          </div>
+      </div>
+    </div>
+
+
+      <!-- History Modal -->
+    <div class="modal fade" id="historyModal<%= data.id %>" tabindex="-1" role="dialog" aria-labelledby="historyModalLabel<%= data.id %>" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="historyModalLabel<%= data.id %>">Add to watched?</h5>                                          
+          </div>
+          <div class="modal-body">
+          Would you like to track this item as watched?
+              <form action="/history/addMediaToHistory" method="post" >
+                <% if (data.media_type == 'movie') { %>
+                  <input type="hidden" name="media_type" value="M" class="visually-hidden">
+                  <% } else { %>
+                  <input type="hidden" name="media_type" value="T" class="visually-hidden">
+                  <% } %>
                   <input type="hidden" name="season_no" value="-1" class="visually-hidden">
                   <input type="hidden" name="episode_no" value="-1" class="visually-hidden">
                   <input type="hidden" name="userName" value="<%= active_username %>" class="visually-hidden">
@@ -57,33 +100,53 @@
           </div>
           </div>
       </div>
-      </div> 
-</div>
+    </div>
 
 
-
-
-
-
-
-
-
-                
-                <button type="button" class="btn btn-secondary">2</button>
-              
-                <div class="btn-group" role="group">
-                  <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle"  data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                   Rating 
-                  </button>
-                  <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                    <a class="dropdown-item" href="#">Dropdown link</a>
-                    <a class="dropdown-item" href="#">Dropdown link</a>
-                  </div>
-                </div>
-              </div>
-      </div>
+          <!-- Rate Modal -->
+    <div class="modal fade" id="rateModal<%= data.id %>" tabindex="-1" role="dialog" aria-labelledby="rateModalLabel<%= data.id %>" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="rateModalLabel<%= data.id %>">Rate</h5>                                          
+          </div>
+          <div class="modal-body">
+              <form action="/ratings/addMediaRating" method="post" >
+                <div class="form-group">
+                  <label for="addMediaRating">Select Rating:</label>
+                  <select class="form-control" name = "score" id="addMediaRating" >
+                <% for (j = 0; j <= 10; j++) {%>
+                    <option value = "<%= j %>"><%= j %></option>
+                <% } %>
+                  </select>
+                  <% if (data.media_type == 'movie') { %>
+                  <input type="hidden" name="media_type" value="M" class="visually-hidden">
+                  <% } else { %>
+                  <input type="hidden" name="media_type" value="T" class="visually-hidden">
+                  <% } %>
+                  <input type="hidden" name="season_no" value="-1" class="visually-hidden">
+                  <input type="hidden" name="episode_no" value="-1" class="visually-hidden">
+                  <input type="hidden" name="userName" value="<%= active_username %>" class="visually-hidden">
+                  <input type="hidden" name="tmdb_id" value="<%= data.id %>" class="visually-hidden">
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary">Yes</button>
+              </form>  
+          </div>
+          </div>
+          </div>
       </div>
     </div>
+    </div>
+
+
+
+
+      </div>
+      </div>
+      </div>
+      </div>
+
     <% } %>
     </div>
     </div>

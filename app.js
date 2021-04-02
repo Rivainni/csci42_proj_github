@@ -101,7 +101,123 @@ app.get('/help', (req, res) => {
 
 
 app.get('/history', requireLogin, (req, res) => {
-    res.render('history.ejs', {active_username})
+    var historyData = []
+    var mediaData = []
+    var mediaURL = ''
+
+
+    const db = makeDb();
+    (async () => {
+        try {
+            const historyQuery = await db.query(
+                `
+
+                select media.*, media_history.history_id, media_history.watch_date, history.username 
+                from media, media_history, history
+                where 
+                username = '${active_username}'
+                and history.history_id = media_history.history_id
+                and media_history.media_id = media.media_id;
+
+
+                `
+                
+            )    
+            historyData = historyQuery 
+            
+            for (i = 0; i < historyData.length; i++) {
+                if (historyData[i].media_type=="M") {    
+                mediaURL = `https://api.themoviedb.org/3/movie/${historyData[i].tmdb_id}?api_key=f5d0b40e98581b4563c21ee53a7209ee`
+                }
+                else if (historyData[i].media_type=="T") {
+                    mediaURL = `https://api.themoviedb.org/3/tv/${historyData[i].tmdb_id}?api_key=f5d0b40e98581b4563c21ee53a7209ee`
+                } else if (historyData[i].media_type=="E") {
+                    mediaURL = `https://api.themoviedb.org/3/tv/${historyData[i].tmdb_id}/season/${historyData[i].season_no}/episode/${historyData[i].episode_no}?api_key=f5d0b40e98581b4563c21ee53a7209ee&language=en-US`
+                }
+                
+                await axios.get(mediaURL
+                    , {
+                headers: {
+                'Content-Type': 'application/json',
+                'charset': 'utf-8'
+                }
+                })
+                .then((res) => {
+                    mediaData.push(res.data)
+                })
+                .catch((error) => {
+                console.error(error)
+                })
+            }
+            
+         } 
+        //  catch {console.log('============rating query failed=================')
+            
+         
+         finally {
+          await db.close();
+          res.render('history.ejs', {historyData, mediaData, active_username})
+
+        }
+      })()  
+
+
+})
+
+
+app.post('/history/addMediaToHistory', requireLogin, (req, res) => {
+    const {userName, tmdb_id, media_type, season_no, episode_no} = req.body
+    var fromURL = req.header('Referer') || '/history'
+    var media_id = ''
+
+
+    const db = makeDb();
+    (async () => {
+        try {
+            const insertMedia = await db.query(
+                `
+                insert into media(tmdb_id, media_type, episode_no, season_no)
+                values ('${tmdb_id}','${media_type}', ${episode_no}, ${season_no});
+                `  
+            )
+
+            getMediaID = await db.query(
+                `
+                select last_insert_id() as id;
+                `  
+            )
+
+            media_id = getMediaID[0].id
+
+            const insertHistory = await db.query(
+                `
+                insert into history(username)
+                values ('${active_username}');
+                `  
+            )
+
+            const insertMediaHistory = await db.query(
+                `
+                insert into media_history(history_id, media_id, watch_date)
+                values (last_insert_id(), ${media_id},now());
+                `  
+            )
+
+ 
+            
+         }     catch(error){
+            console.error(error)
+            }
+            
+         
+         finally {
+          await db.close();
+          // res.redirect(fromURL)
+          res.redirect(fromURL)
+        }
+      })()  
+
+
 })
 
 
@@ -152,6 +268,8 @@ app.post('/lists/addMediaToList', requireLogin, (req, res) => {
                 values (${list_id}, ${getmediaIdfrom});
                 `
             )
+
+
          } 
          
          finally {
@@ -216,9 +334,9 @@ app.get('/lists/:listid', requireLogin, async (req, res) => {
                 mediaURL = `https://api.themoviedb.org/3/movie/${listData[i].tmdb_id}?api_key=f5d0b40e98581b4563c21ee53a7209ee`
                 }
                 else if (listData[i].media_type=="T") {
-                    mediaURL = `https://api.themoviedb.org/3/tv/${listData[i].media_id}?api_key=f5d0b40e98581b4563c21ee53a7209ee`
+                    mediaURL = `https://api.themoviedb.org/3/tv/${listData[i].tmdb_id}?api_key=f5d0b40e98581b4563c21ee53a7209ee`
                 } else if (listData[i].media_type=="E") {
-                    mediaURL = `https://api.themoviedb.org/3/tv/${listData[i].media_id}/season/${listData[i].season_no}/episode/${listData[i].episode_no}?api_key=f5d0b40e98581b4563c21ee53a7209ee&language=en-US`
+                    mediaURL = `https://api.themoviedb.org/3/tv/${listData[i].tmdb_id}/season/${listData[i].season_no}/episode/${listData[i].episode_no}?api_key=f5d0b40e98581b4563c21ee53a7209ee&language=en-US`
                 }
                 
                 await axios.get(mediaURL
@@ -307,6 +425,25 @@ app.get('/logout', (req, res) => {
 app.get('/movie/:movieID', async (req, res) => {
     const movieID = req.params.movieID;
     var movieData = {}
+    var allLists = []
+
+    const db = makeDb();
+    (async () => {
+        try {
+            const allListsQuery = await db.query(
+                `
+                SELECT *
+                FROM list
+                WHERE username = '${active_username}'
+                `
+                );
+
+            allLists =  allListsQuery
+         } finally {
+          await db.close();
+        }
+      })() 
+
     await axios.get(`https://api.themoviedb.org/3/movie/${movieID}?api_key=f5d0b40e98581b4563c21ee53a7209ee`, {
     headers: {
     'Content-Type': 'application/json',
@@ -320,7 +457,7 @@ app.get('/movie/:movieID', async (req, res) => {
     console.error(error)
     })
     console.log(movieData)
-    res.render('movie.ejs', {movieData, active_username})
+    res.render('movie.ejs', {movieData, allLists, active_username})
 })
 
 app.get('/tv/:tvID/:season/:episodeCount/episodeDetail', async (req,res) => {
@@ -329,6 +466,25 @@ app.get('/tv/:tvID/:season/:episodeCount/episodeDetail', async (req,res) => {
     const episodeCount = req.params.episodeCount
     var tvData = []
     var urls = []
+    var allLists = []
+
+    const db = makeDb();
+    (async () => {
+        try {
+            const allListsQuery = await db.query(
+                `
+                SELECT *
+                FROM list
+                WHERE username = '${active_username}'
+                `
+                );
+
+            allLists =  allListsQuery
+         } finally {
+          await db.close();
+        }
+      })() 
+
     urls.unshift(`https://api.themoviedb.org/3/tv/${tvID}?api_key=f5d0b40e98581b4563c21ee53a7209ee`)
     for (let i = 0; i <= episodeCount; i++) {
         urls.push(`https://api.themoviedb.org/3/tv/${tvID}/season/${seasonID}/episode/${i + 1}?api_key=f5d0b40e98581b4563c21ee53a7209ee&language=en-US`)
@@ -346,7 +502,7 @@ app.get('/tv/:tvID/:season/:episodeCount/episodeDetail', async (req,res) => {
             })
     }
 
-    res.render('episodeDetail.ejs', { tvData, active_username })
+    res.render('episodeDetail.ejs', { tvData, allLists, active_username })
 })
 
 
@@ -396,7 +552,7 @@ app.post('/profile/updateName', requireLogin, (req, res) => {
     });
 
 
-    res.send(req.body)
+    res.redirect('/profile')
 })
 
 
@@ -411,7 +567,7 @@ app.get('/ratings', requireLogin, (req, res) => {
         try {
             const ratingQuery = await db.query(
                 `
-                select rating.*, tmdb_id, media_type, season_no, episode_no from rating, media where username='Zuikaku' and media.media_id = rating.media_id
+                select rating.*, tmdb_id, media_type, season_no, episode_no from rating, media where username='${active_username}' and media.media_id = rating.media_id
                 `
                 
             )    
@@ -422,9 +578,9 @@ app.get('/ratings', requireLogin, (req, res) => {
                 mediaURL = `https://api.themoviedb.org/3/movie/${ratingData[i].tmdb_id}?api_key=f5d0b40e98581b4563c21ee53a7209ee`
                 }
                 else if (ratingData[i].media_type=="T") {
-                    mediaURL = `https://api.themoviedb.org/3/tv/${ratingData[i].media_id}?api_key=f5d0b40e98581b4563c21ee53a7209ee`
+                    mediaURL = `https://api.themoviedb.org/3/tv/${ratingData[i].tmdb_id}?api_key=f5d0b40e98581b4563c21ee53a7209ee`
                 } else if (ratingData[i].media_type=="E") {
-                    mediaURL = `https://api.themoviedb.org/3/tv/${ratingData[i].media_id}/season/${ratingData[i].season_no}/episode/${ratingData[i].episode_no}?api_key=f5d0b40e98581b4563c21ee53a7209ee&language=en-US`
+                    mediaURL = `https://api.themoviedb.org/3/tv/${ratingData[i].tmdb_id}/season/${ratingData[i].season_no}/episode/${ratingData[i].episode_no}?api_key=f5d0b40e98581b4563c21ee53a7209ee&language=en-US`
                 }
                 
                 await axios.get(mediaURL
@@ -454,6 +610,40 @@ app.get('/ratings', requireLogin, (req, res) => {
       })()  
 
 
+})
+
+app.post('/ratings/addMediaRating', requireLogin, (req, res) => {
+    const {score, userName, tmdb_id, media_type, season_no, episode_no} = req.body
+    var fromURL = req.header('Referer') || '/ratings'
+    var media_id = ''
+
+    const db = makeDb();
+    (async () => {
+        try {
+             const insertMedia = await db.query(
+                `
+                insert into media(tmdb_id, media_type, episode_no, season_no)
+                values ('${tmdb_id}','${media_type}', ${episode_no}, ${season_no});
+                `
+            )
+    
+            const insertRating = await db.query(
+                `
+                insert into rating(score, rating_date, media_id, username)
+                values ('${score}',now(), last_insert_id(), '${active_username}');
+                `
+            )
+
+         } 
+         catch(error){
+            console.error(error)
+            }
+         
+         finally {
+          await db.close();
+          res.redirect(fromURL)
+        }
+      })()  
 })
 
 app.get('/register', (req, res) => {
@@ -504,7 +694,6 @@ app.get('/search', async (req, res) => {
     if (qstring == "") {qstring = "undefined"}
     var searchData = []   
     var allLists = []
-    var inListData = []
 
     const db = makeDb();
     (async () => {
@@ -516,17 +705,8 @@ app.get('/search', async (req, res) => {
                 WHERE username = '${active_username}'
                 `
                 );
-            const inListQuery = await db.query(
-                `
-                SELECT tmdb_id FROM media, list, media_list 
-                WHERE 
-                list.username = '${active_username}'
-                AND list.list_id=media_list.list_id 
-                AND media_list.media_id=media.media_id
-                `
-            )
+
             allLists =  allListsQuery
-            inListData = inListQuery
          } finally {
           await db.close();
         }
@@ -555,6 +735,26 @@ app.get('/search', async (req, res) => {
 app.get('/tv/:tvID', async (req, res) => {
     const tvID = req.params.tvID
     var tvData = {}
+
+    var allLists = []
+
+    const db = makeDb();
+    (async () => {
+        try {
+            const allListsQuery = await db.query(
+                `
+                SELECT *
+                FROM list
+                WHERE username = '${active_username}'
+                `
+                );
+
+            allLists =  allListsQuery
+         } finally {
+          await db.close();
+        }
+      })() 
+
     await axios.get(`https://api.themoviedb.org/3/tv/${tvID}?api_key=f5d0b40e98581b4563c21ee53a7209ee`, {
     headers: {
     'Content-Type': 'application/json',
@@ -568,7 +768,7 @@ app.get('/tv/:tvID', async (req, res) => {
     console.error(error)
     })
     console.log(tvData)
-    res.render('tv.ejs', {tvData, active_username})
+    res.render('tv.ejs', {tvData, allLists, active_username})
 })
 
 app.get('*', (req, res) => {
