@@ -78,17 +78,17 @@ db.query('SELECT "The database is running..." AS status', function (error, resul
     console.log(results[0]);
 });
 
-var active_username = ''
+var active_username = 'sottoms'
 
 // Clear logged in users
 
 
-db.query('SELECT username FROM user WHERE login_status=1', function (error, results, fields) {
-    if (error) throw error;
-    if (!results[0]) {
-        console.log ('There is no user logged in');
-    }
-})
+// db.query('SELECT username FROM user WHERE login_status=1', function (error, results, fields) {
+//     if (error) throw error;
+//     if (!results[0]) {
+//         console.log ('There is no user logged in');
+//     }
+// })
 
 const requireLogin = (req, res, next) => {
     if (!active_username) {
@@ -317,6 +317,33 @@ app.post('/lists/addNewList', requireLogin, (req, res) => {
     });
 })
 
+app.post('/lists/deleteMediaFromList', requireLogin, (req, res) => {
+    const {media_id} = req.body
+    var fromURL = req.header('Referer') || '/lists'
+
+    const db = makeDb();
+    (async () => {
+        try {
+            const insertToMedia = await db.query(
+                `
+                delete from media
+                where media_id = '${media_id}';
+                `
+            )
+         } 
+         catch {
+         }
+         
+         finally {
+          await db.close();
+          req.flash('success', 'Media successfully deleted from list')
+          res.redirect(fromURL)
+            
+        }
+      })()  
+        
+})
+
 app.post('/lists/deleteList', requireLogin, (req, res) => {
     const {userName, list_id} = req.body
     var fromURL = req.header('Referer') || '/lists'
@@ -324,13 +351,8 @@ app.post('/lists/deleteList', requireLogin, (req, res) => {
     db.query(`delete from list where list_id='${list_id}' and username='${userName}';`, function (error, results, fields) {
         if (error) {throw error;}
         else {    
-        db.query(`delete from media_list where list_id='${list_id}';`, function (error, results, fields) {
-        if (error) {throw error;}
-        else {
         req.flash('success', 'List deleted successfully')
         res.redirect(fromURL)
-        }
-    });
         }
     });
 
@@ -353,7 +375,6 @@ app.get('/lists/:listid', requireLogin, async (req, res) => {
             `
             );
             listData = results
-            console.log(listData)
             
             for (i = 0; i < listData.length; i++) {
                 if (listData[i].media_type=="M") {    
@@ -365,6 +386,7 @@ app.get('/lists/:listid', requireLogin, async (req, res) => {
                     mediaURL = `https://api.themoviedb.org/3/tv/${listData[i].tmdb_id}/season/${listData[i].season_no}/episode/${listData[i].episode_no}?api_key=f5d0b40e98581b4563c21ee53a7209ee&language=en-US`
                 }
                 
+
                 await axios.get(mediaURL
                     , {
                 headers: {
@@ -376,26 +398,16 @@ app.get('/lists/:listid', requireLogin, async (req, res) => {
                     mediaData.push(res.data)
                 })
                 .catch((error) => {
-                console.error(error)
+                    console.error(error)
                 })
             
             }
-
-
-
         } finally {
           await db.close();
           res.render("listDetail.ejs", {listData, mediaData, active_username})
-
-          console.log(mediaData)
-
-
         }
       })()
-
-    
 })
-
 
 app.get('/login', (req, res) => {
     res.render('login.ejs', {active_username})
