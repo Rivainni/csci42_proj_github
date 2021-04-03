@@ -164,7 +164,6 @@ app.get('/history', requireLogin, (req, res) => {
                     mediaData.push(res.data)
                 })
                 .catch((error) => {
-                req.flash('error', 'Error when handling historyData')
                 console.error(error)
                 })
             }
@@ -225,7 +224,6 @@ app.post('/history/addMediaToHistory', requireLogin, (req, res) => {
  
             
          }     catch(error){
-            req.flash('error', 'Error when handling addMediaToHistory')
             console.error(error)
             }
             
@@ -294,7 +292,6 @@ app.post('/lists/addMediaToList', requireLogin, (req, res) => {
 
          } 
          catch {
-             req.flash('error', 'Error when handling addMediaToList')
          }
          
          finally {
@@ -652,7 +649,6 @@ app.get('/ratings', requireLogin, (req, res) => {
             
          } 
         catch {
-            req.flash('error', 'Error when handling ratingQuery')
 
         }
             
@@ -691,7 +687,6 @@ app.post('/ratings/addMediaRating', requireLogin, (req, res) => {
 
          } 
          catch(error){
-            req.flash('error', 'Error when handling addMediaToList')
 
             console.error(error)
             }
