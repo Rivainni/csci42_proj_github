@@ -164,7 +164,7 @@ app.get('/history', requireLogin, (req, res) => {
                     mediaData.push(res.data)
                 })
                 .catch((error) => {
-                req.flash('error', 'Error when handling historData')
+                req.flash('error', 'Error when handling historyData')
                 console.error(error)
                 })
             }
@@ -300,11 +300,11 @@ app.post('/lists/addMediaToList', requireLogin, (req, res) => {
          finally {
           await db.close();
           req.flash('success', 'Media successfully added to list')
+          res.redirect(fromURL)
             
         }
       })()  
-      req.flash('success', 'Media successfully added to list.')
-        res.redirect(fromURL)
+        
 })
 
 app.post('/lists/addNewList', requireLogin, (req, res) => {
@@ -413,7 +413,7 @@ app.post('/login', async (req, res) => {
         if (error) throw error;
         if (!results[0]) {
             req.flash('error', 'The user does not exist in the database')
-
+            res.redirect('/login')
             console.log('The user does not exist in the database')
         } else {
             if (results[0].pwd == password) {
@@ -435,7 +435,7 @@ app.post('/login', async (req, res) => {
 
             } else {
                 req.flash('error', 'Invalid password.')
-
+                req.redirect('/login')
                 console.log('invalid password')
             }
         }
@@ -556,16 +556,21 @@ app.post('/profile/updatePassword', requireLogin, (req, res) => {
     
     if (password == "") {
         req.flash('error', 'The password you entered is null.')
+        res.redirect('/profile')
 
         console.log('password is null')
     } else if (password != confirmPassword) {
         req.flash('error', 'The password and confirm password fields should be the same.')
 
         console.log('password is not equal to confirm password')
+        res.redirect('/profile')
+
     } else if (!regExp.test(password)) {
         req.flash('error', 'Your password should be 8 characters long, contain a number and special character.')
 
         console.log('password pattern not allowed')
+        res.redirect('/profile')
+
     } else {
         db.query(
             `UPDATE user SET pwd='${password}' WHERE username='${userName}';`
@@ -586,17 +591,20 @@ app.post('/profile/updateName', requireLogin, (req, res) => {
     if (firstName == "" || lastName == "") {
         req.flash('error', 'Your first or last name cannot be null.')
         console.log("firstName or lastName is null")
+        res.redirect('/profile')
+
     } else
     db.query(
         `UPDATE user SET first_name='${firstName}', last_name='${lastName}' WHERE username='${userName}';`
         , function (error, results, fields) {
             if (error) throw error;
             req.flash('success', 'Name successfully updated.')
+            res.redirect('/profile')
+
             console.log('name updated')
     });
 
 
-    res.redirect('/profile')
 })
 
 
@@ -721,15 +729,21 @@ app.post('/register', async (req, res) => {
         
         if (password == "") {
             req.flash('error', 'Password cannot be null')
+            res.redirect('/register')
+
 
             console.log('password is null')
         } else if (password != confirmPassword) {
             req.flash('error', 'Password is not equal to Confirm Password')
+            res.redirect('/register')
+
 
             console.log('password is not equal to confirm password')
         } else if (!regExp.test(password)) {
             req.flash('error', 'Password should be 8 characters long, should contain a number and special character.')
             console.log('password pattern not allowed')
+            res.redirect('/register')
+
         } else {
         db.query(
             `INSERT INTO user (username, last_name, first_name,  pwd, login_status) 
