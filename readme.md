@@ -14,6 +14,8 @@ Package installation via npm and required modules for node (no need to do these 
 `npm install --save mysql`
 `npm install --save express`
 `npm install --save axios`
+`npm install --save express-session`
+`npm install --save connect-flash`
 
 When configuration is complete, you may run the server with: `node app.js` (Ensure that mySQL server is running as well).
 

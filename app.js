@@ -21,6 +21,23 @@ app.set('view engine', 'ejs');
 const util = require('util');
 const mysql = require("mysql");
 
+// Use Session
+const session = require('express-session');
+const sessionConfig = {
+    secret: 'thisshouldbeabettersecret',
+    resave: false,
+    saveUninitialized: true
+}
+app.use(session(sessionConfig));
+
+// Use Connect-Flash
+const flash = require ('connect-flash');
+app.use(flash());
+app.use((req, res, next) => {
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
+    next();
+})
 
 
 // Use Axios
@@ -75,6 +92,7 @@ db.query('SELECT username FROM user WHERE login_status=1', function (error, resu
 
 const requireLogin = (req, res, next) => {
     if (!active_username) {
+        
        res.redirect('/login') 
     }
    else {
@@ -146,6 +164,7 @@ app.get('/history', requireLogin, (req, res) => {
                     mediaData.push(res.data)
                 })
                 .catch((error) => {
+                req.flash('error', 'Error when handling historData')
                 console.error(error)
                 })
             }
@@ -206,6 +225,7 @@ app.post('/history/addMediaToHistory', requireLogin, (req, res) => {
  
             
          }     catch(error){
+            req.flash('error', 'Error when handling addMediaToHistory')
             console.error(error)
             }
             
@@ -213,6 +233,8 @@ app.post('/history/addMediaToHistory', requireLogin, (req, res) => {
          finally {
           await db.close();
           // res.redirect(fromURL)
+          req.flash('success', 'Media successully added to History.')
+
           res.redirect(fromURL)
         }
       })()  
@@ -271,12 +293,17 @@ app.post('/lists/addMediaToList', requireLogin, (req, res) => {
 
 
          } 
+         catch {
+             req.flash('error', 'Error when handling addMediaToList')
+         }
          
          finally {
           await db.close();
+          req.flash('success', 'Media successfully added to list')
+            
         }
       })()  
-
+      req.flash('success', 'Media successfully added to list.')
         res.redirect(fromURL)
 })
 
@@ -287,6 +314,7 @@ app.post('/lists/addNewList', requireLogin, (req, res) => {
     db.query(`insert into list(list_name, username) values ('${newLabelName}','${userName}');`, function (error, results, fields) {
         if (error) {throw error;}
         else {
+        req.flash('success', 'List added successfully')
         res.redirect(fromURL)
         }
     });
@@ -302,6 +330,7 @@ app.post('/lists/deleteList', requireLogin, (req, res) => {
         db.query(`delete from media_list where list_id='${list_id}';`, function (error, results, fields) {
         if (error) {throw error;}
         else {
+        req.flash('success', 'List deleted successfully')
         res.redirect(fromURL)
         }
     });
@@ -383,6 +412,8 @@ app.post('/login', async (req, res) => {
         , function (error, results, fields) {
         if (error) throw error;
         if (!results[0]) {
+            req.flash('error', 'The user does not exist in the database')
+
             console.log('The user does not exist in the database')
         } else {
             if (results[0].pwd == password) {
@@ -398,10 +429,13 @@ app.post('/login', async (req, res) => {
                     console.log('db login user updatedi');
                     active_username = userName
                     console.log(`active user is ${active_username}`)
+                    req.flash('success', 'Successfully logged in.')
                     res.redirect('/search')
                 });
 
             } else {
+                req.flash('error', 'Invalid password.')
+
                 console.log('invalid password')
             }
         }
@@ -416,6 +450,7 @@ app.get('/logout', (req, res) => {
    if (error) throw error;
    active_username = ''
    console.log('user logged out');
+
     res.render('logout.ejs', {active_username:''})
 }); 
 
@@ -520,16 +555,23 @@ app.post('/profile/updatePassword', requireLogin, (req, res) => {
     var regExp = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$");
     
     if (password == "") {
+        req.flash('error', 'The password you entered is null.')
+
         console.log('password is null')
     } else if (password != confirmPassword) {
+        req.flash('error', 'The password and confirm password fields should be the same.')
+
         console.log('password is not equal to confirm password')
     } else if (!regExp.test(password)) {
+        req.flash('error', 'Your password should be 8 characters long, contain a number and special character.')
+
         console.log('password pattern not allowed')
     } else {
         db.query(
             `UPDATE user SET pwd='${password}' WHERE username='${userName}';`
             , function (error, results, fields) {
             if (error) throw error;
+            req.flash('success', 'Password successfully updated.')
             console.log('password updated')
             res.redirect('/search')
     });
@@ -542,12 +584,14 @@ app.post('/profile/updateName', requireLogin, (req, res) => {
     const {userName, firstName, lastName} = req.body
 
     if (firstName == "" || lastName == "") {
+        req.flash('error', 'Your first or last name cannot be null.')
         console.log("firstName or lastName is null")
     } else
     db.query(
         `UPDATE user SET first_name='${firstName}', last_name='${lastName}' WHERE username='${userName}';`
         , function (error, results, fields) {
             if (error) throw error;
+            req.flash('success', 'Name successfully updated.')
             console.log('name updated')
     });
 
@@ -599,7 +643,10 @@ app.get('/ratings', requireLogin, (req, res) => {
             }
             
          } 
-        //  catch {console.log('============rating query failed=================')
+        catch {
+            req.flash('error', 'Error when handling ratingQuery')
+
+        }
             
          
          finally {
@@ -636,11 +683,14 @@ app.post('/ratings/addMediaRating', requireLogin, (req, res) => {
 
          } 
          catch(error){
+            req.flash('error', 'Error when handling addMediaToList')
+
             console.error(error)
             }
          
          finally {
           await db.close();
+          req.flash('success', 'Rating successfully added to addMediaRating.')
           res.redirect(fromURL)
         }
       })()  
@@ -663,15 +713,22 @@ app.post('/register', async (req, res) => {
     , function (error, results, fields) {
         if (error) throw error;
         if (results[0]) {
+            req.flash('error', 'The username you entered already exists in the system.')
+
             console.log('user already exists')
             res.redirect('/register')
         }  else { 
         
         if (password == "") {
+            req.flash('error', 'Password cannot be null')
+
             console.log('password is null')
         } else if (password != confirmPassword) {
+            req.flash('error', 'Password is not equal to Confirm Password')
+
             console.log('password is not equal to confirm password')
         } else if (!regExp.test(password)) {
+            req.flash('error', 'Password should be 8 characters long, should contain a number and special character.')
             console.log('password pattern not allowed')
         } else {
         db.query(
@@ -680,6 +737,7 @@ app.post('/register', async (req, res) => {
         , function (error, results, fields) {
             if (error) throw error;
             console.log('New User Created')
+            req.flash('success', 'New user successfully registered.')
             res.redirect('/login')
         }) 
         }
@@ -772,5 +830,6 @@ app.get('/tv/:tvID', async (req, res) => {
 })
 
 app.get('*', (req, res) => {
-    res.send('<h1>MediaLists Page not available.</h1>.')
+    req.flash('error', 'Page not found')
+    res.redirect('/search')
 })
