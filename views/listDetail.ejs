@@ -92,7 +92,9 @@
                 <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#historyModal<%= listData[i].media_id %>"> 
                     Watched 
                 </button>    
-                <!-- Delete Media From List Button trigger modal -->
+                <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#rateModal<%= listData[i].media_id %>"> 
+                    Rate 
+                </button> 
                 <button class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#ListMediaModal<%= listData[i].media_id %>"> 
                 Delete From List
                 </button>       
@@ -153,10 +155,51 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Rate Modal -->
+                    <div class="modal fade" id="rateModal<%= listData[i].media_id %>" tabindex="-1" role="dialog" aria-labelledby="rateModalLabel<%= listData[i].media_id %>" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="rateModalLabel<%= listData[i].media_id %>">Rate</h5>                                          
+                    </div>
+                    <div class="modal-body">
+                        <form action="/ratings/addMediaRating" method="post" >
+                        <div class="form-group">
+                            <label for="addMediaRating">Select Rating:</label>
+                            <select class="form-control" name = "score" id="addMediaRating" >
+                        <% for (j = 0; j <= 10; j++) {%>
+                            <option value = "<%= j %>"><%= j %></option>
+                        <% } %>
+                            </select>
+                        <% if (listData[i].media_type == 'movie') { %>
+                            <input type="hidden" name="media_type" value="M" class="visually-hidden">
+                            <input type="hidden" name="season_no" value="-1" class="visually-hidden">
+                            <input type="hidden" name="episode_no" value="-1" class="visually-hidden">
+                            <% } else if (listData[i].media_type == 'tv') { %>
+                            <input type="hidden" name="media_type" value="T" class="visually-hidden">
+                            <input type="hidden" name="season_no" value="-1" class="visually-hidden">
+                            <input type="hidden" name="episode_no" value="-1" class="visually-hidden">
+                            <% } else { %>
+                            <input type="hidden" name="media_type" value="E" class="visually-hidden">
+                            <input type="hidden" name="season_no" value="<%= listData[i].season_no %>" class="visually-hidden">
+                            <input type="hidden" name="episode_no" value="<%= listData[i].episode_no %>" class="visually-hidden">
+                            <% } %>
+                            <input type="hidden" name="userName" value="<%= active_username %>" class="visually-hidden">
+                            <input type="hidden" name="tmdb_id" value="<%= listData[i].tmdb_id %>" class="visually-hidden">
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Yes</button>
+                        </form>  
+                    </div>
+                    </div>
+                    </div>
+                    </div>
                         
                         
                         
 </div> <!-- Button Group -->
+</div>
 </div>
 </div>
 </div>
