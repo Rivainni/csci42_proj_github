@@ -78,17 +78,17 @@ db.query('SELECT "The database is running..." AS status', function (error, resul
     console.log(results[0]);
 });
 
-var active_username = 'sottoms'
+var active_username = ''
 
 // Clear logged in users
 
 
-// db.query('SELECT username FROM user WHERE login_status=1', function (error, results, fields) {
-//     if (error) throw error;
-//     if (!results[0]) {
-//         console.log ('There is no user logged in');
-//     }
-// })
+db.query('SELECT username FROM user WHERE login_status=1', function (error, results, fields) {
+    if (error) throw error;
+    if (!results[0]) {
+        console.log ('There is no user logged in');
+    }
+})
 
 const requireLogin = (req, res, next) => {
     if (!active_username) {
@@ -122,7 +122,24 @@ app.get('/history', requireLogin, (req, res) => {
     var historyData = []
     var mediaData = []
     var mediaURL = ''
+    var allLists = []
 
+    const connection = makeDb();
+    (async () => {
+        try {
+            const allListsQuery = await connection.query(
+                `
+                SELECT *
+                FROM list
+                WHERE username = '${active_username}'
+                `
+                );
+
+            allLists =  allListsQuery
+         } finally {
+          await connection.close();
+        }
+      })() 
 
     const db = makeDb();
     (async () => {
@@ -174,7 +191,7 @@ app.get('/history', requireLogin, (req, res) => {
          
          finally {
           await db.close();
-          res.render('history.ejs', {historyData, mediaData, active_username})
+          res.render('history.ejs', {historyData, mediaData, allLists, active_username})
 
         }
       })()  
@@ -230,7 +247,7 @@ app.post('/history/addMediaToHistory', requireLogin, (req, res) => {
          
          finally {
           await db.close();
-          // res.redirect(fromURL)
+          res.redirect(fromURL)
           req.flash('success', 'Media successully added to History.')
 
           res.redirect(fromURL)
@@ -240,6 +257,32 @@ app.post('/history/addMediaToHistory', requireLogin, (req, res) => {
 
 })
 
+app.post('/history/deleteMediaFromHistory', requireLogin, (req, res) => {
+    const {media_id} = req.body
+    var fromURL = req.header('Referer') || '/lists'
+
+    const db = makeDb();
+    (async () => {
+        try {
+            const deleteFromMedia = await db.query(
+                `
+                delete from media
+                where media_id = '${media_id}';
+                `
+            )
+         } 
+         catch {
+         }
+         
+         finally {
+          await db.close();
+          req.flash('success', 'Media successfully deleted from history page.')
+          res.redirect(fromURL)
+            
+        }
+      })()  
+        
+})
 
 app.get('/landing', (req, res) => {
     res.render('landing.ejs', {active_username})
@@ -324,7 +367,7 @@ app.post('/lists/deleteMediaFromList', requireLogin, (req, res) => {
     const db = makeDb();
     (async () => {
         try {
-            const insertToMedia = await db.query(
+            const deleteFromMedia = await db.query(
                 `
                 delete from media
                 where media_id = '${media_id}';
@@ -621,7 +664,24 @@ app.get('/ratings', requireLogin, (req, res) => {
     var ratingData = []
     var mediaData = []
     var mediaURL = ''
+    var allLists = []
 
+    const connection = makeDb();
+    (async () => {
+        try {
+            const allListsQuery = await connection.query(
+                `
+                SELECT *
+                FROM list
+                WHERE username = '${active_username}'
+                `
+                );
+
+            allLists =  allListsQuery
+         } finally {
+          await connection.close();
+        }
+      })() 
 
     const db = makeDb();
     (async () => {
@@ -667,7 +727,7 @@ app.get('/ratings', requireLogin, (req, res) => {
          
          finally {
           await db.close();
-          res.render('ratings.ejs', {ratingData, mediaData, active_username})
+          res.render('ratings.ejs', {ratingData, mediaData, allLists, active_username})
 
         }
       })()  
@@ -709,6 +769,33 @@ app.post('/ratings/addMediaRating', requireLogin, (req, res) => {
           res.redirect(fromURL)
         }
       })()  
+})
+
+app.post('/ratings/deleteMediaFromRating', requireLogin, (req, res) => {
+    const {media_id} = req.body
+    var fromURL = req.header('Referer') || '/lists'
+
+    const db = makeDb();
+    (async () => {
+        try {
+            const deleteFromMedia = await db.query(
+                `
+                delete from media
+                where media_id = '${media_id}';
+                `
+            )
+         } 
+         catch {
+         }
+         
+         finally {
+          await db.close();
+          req.flash('success', 'Media successfully deleted from rating page.')
+          res.redirect(fromURL)
+            
+        }
+      })()  
+        
 })
 
 app.get('/register', (req, res) => {

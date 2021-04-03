@@ -131,11 +131,11 @@
                             <div class="modal-body">
                             Would you like to track this item as watched?
                                 <form action="/history/addMediaToHistory" method="post" >
-                                <% if (listData[i].media_type == 'movie') { %>
+                                <% if (listData[i].media_type == 'M') { %>
                                     <input type="hidden" name="media_type" value="M" class="visually-hidden">
                                     <input type="hidden" name="season_no" value="-1" class="visually-hidden">
                                     <input type="hidden" name="episode_no" value="-1" class="visually-hidden">
-                                    <% } else if (listData[i].media_type == 'tv') { %>
+                                    <% } else if (listData[i].media_type == 'T') { %>
                                     <input type="hidden" name="media_type" value="T" class="visually-hidden">
                                     <input type="hidden" name="season_no" value="-1" class="visually-hidden">
                                     <input type="hidden" name="episode_no" value="-1" class="visually-hidden">
@@ -172,11 +172,11 @@
                             <option value = "<%= j %>"><%= j %></option>
                         <% } %>
                             </select>
-                        <% if (listData[i].media_type == 'movie') { %>
+                        <% if (listData[i].media_type == 'M') { %>
                             <input type="hidden" name="media_type" value="M" class="visually-hidden">
                             <input type="hidden" name="season_no" value="-1" class="visually-hidden">
                             <input type="hidden" name="episode_no" value="-1" class="visually-hidden">
-                            <% } else if (listData[i].media_type == 'tv') { %>
+                            <% } else if (listData[i].media_type == 'T') { %>
                             <input type="hidden" name="media_type" value="T" class="visually-hidden">
                             <input type="hidden" name="season_no" value="-1" class="visually-hidden">
                             <input type="hidden" name="episode_no" value="-1" class="visually-hidden">
@@ -195,9 +195,6 @@
                     </div>
                     </div>
                     </div>
-                        
-                        
-                        
 </div> <!-- Button Group -->
 </div>
 </div>
