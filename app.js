@@ -487,7 +487,7 @@ app.post('/login', async (req, res) => {
 
             } else {
                 req.flash('error', 'Invalid password.')
-                req.redirect('/login')
+                res.redirect('/login')
                 console.log('invalid password')
             }
         }
@@ -630,7 +630,7 @@ app.post('/profile/updatePassword', requireLogin, (req, res) => {
             if (error) throw error;
             req.flash('success', 'Password successfully updated.')
             console.log('password updated')
-            res.redirect('/search')
+            res.redirect('/profile')
     });
     }
 })

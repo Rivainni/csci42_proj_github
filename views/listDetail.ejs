@@ -6,10 +6,12 @@
     <div class="row">
    
         <div class="col-md-10">
+            <%if (listData.length >0)  { %>
             <div class="card">
                 <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <div class="p-2 align-middle">
+ 
                         <h4> <%= listData[0].list_name %>   </h4>
                     </div>
 
@@ -47,7 +49,8 @@
                 
             </div>
             </div>
-        </div>
+     
+     <% } %>   </div>
     </div>
 
 
